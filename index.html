@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Dashboard</title>
+    <meta name="description" content="Interactive framework flowchart" />
+
+    <!-- set initial theme early to avoid flash -->
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
+        } catch {}
+      })();
+    </script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/layouts/AppLayout.css" />
+    <link rel="stylesheet" href="./src/components/Modal.css" />
+    <link rel="stylesheet" href="./src/components/Flowchart.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

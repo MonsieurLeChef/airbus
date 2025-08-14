@@ -1,0 +1,47 @@
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: var(--modal-backdrop);
+  backdrop-filter: blur(2px);
+  animation: fadeIn .15s ease;
+}
+.modal {
+  position: fixed; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 92vw);
+  max-height: 80vh; overflow: auto;
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  animation: popIn .16s ease;
+}
+
+.modal-header {
+  display: flex; align-items: start; justify-content: space-between;
+  padding: 16px 18px 10px 18px; border-bottom: 1px solid var(--border);
+}
+.modal-header h3 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+.modal-subtitle { margin: 4px 0 0; color: var(--text-muted); }
+
+.modal-content { padding: 14px 18px; }
+.modal-footer {
+  display: flex; gap: 8px; padding: 12px 18px 16px;
+  justify-content: flex-end; border-top: 1px solid var(--border);
+}
+
+.btn, .icon-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  padding: 10px 14px; border-radius: 12px; cursor: pointer; color: inherit;
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease;
+}
+.icon-btn { padding: 8px 10px; }
+.btn:hover, .icon-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); background: var(--nav-hover-bg); }
+.btn:focus-visible, .icon-btn:focus-visible { box-shadow: var(--ring); outline: none; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-600), var(--accent-500));
+  color: white; border-color: transparent;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { transform: translate(-50%, -46%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }

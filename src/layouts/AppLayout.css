@@ -1,0 +1,39 @@
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: saturate(120%) blur(10px);
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface));
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
+}
+
+.app-header .brand,
+.app-header .nav { display: flex; align-items: center; }
+
+.brand-logo {
+  width: 36px; height: 36px; display: grid; place-items: center;
+  border-radius: 10px;
+  background: conic-gradient(from 180deg at 50% 50%, #60a5fa, #a78bfa, #60a5fa);
+  color: white; font-weight: 800; transform: rotate(45deg);
+  box-shadow: var(--shadow-lg);
+  margin-right: 12px;
+}
+.brand-text { display: grid; }
+.brand-title { font-size: 18px; letter-spacing: -0.01em; }
+.brand-subtitle { font-size: 12px; color: var(--text-muted); margin-top: -2px; }
+
+.nav { gap: 10px; }
+.nav-link {
+  padding: 8px 12px; border-radius: 10px; color: var(--text-muted);
+}
+.nav-link:hover { background: var(--nav-hover-bg); color: var(--text); }
+.nav-link.is-active { background: var(--nav-active-bg); color: var(--nav-active-text); }
+
+.theme-toggle.icon-btn {
+  padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border);
+  background: transparent; cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .2s ease;
+}
+.theme-toggle.icon-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.theme-toggle.icon-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+
+.app-main { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
