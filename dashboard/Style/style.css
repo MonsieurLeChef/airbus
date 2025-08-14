@@ -89,45 +89,52 @@ body {
   pointer-events: none; /* clicks pass through to slice */
 }
 
+.sunburst-slice-label {
+  font-size: 1.05em;
+  font-weight: 500;
+  fill: #222;
+  pointer-events: none;
+  text-shadow: 0 1px 4px #fff, 0 0px 2px #eee;
+}
+
 /* --- Popup (modal) --- */
+
+/* Overlay to capture outside clicks */
 .popup {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.45);
-  display: grid; place-items: center;
-  padding: 16px;
+  background: rgba(0,0,0,.25);
   z-index: 1000;
 }
 .popup.hidden { display: none; }
+
+/* The popover card is positioned by JS near the anchor point */
 .popup-content {
-  position: relative;
-  background: #afafaf;
-  width: min(600px, 92vw);
-  border-radius: 14px;
-  padding: 22px 20px 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  position: fixed;            /* anchored via JS */
+  max-width: 340px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px 14px 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  color: #333;
 }
-.popup-content h2 {
-  margin: 0 28px 8px 0;
-  font-size: 1.25rem;
-}
-.popup-content p {
-  margin: 0;
-  line-height: 1.5;
-}
+
+/* Close button inside the card */
 .popup-close {
-  position: absolute;
-  margin: 0;
-  /* right: calc(50% - min(300px, 46vw) + 10px);
-  transform: translateY(-6px);
-  top: calc(50% - 50vh + 16px); */
-  top: 8px;                        /* simple in-card positioning */
-  right: 10px;
-  border: none;
-  background: none;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
+  position: absolute; top: 8px; right: 10px;
+  border: 0; background: none; font-size: 20px; line-height: 1; cursor: pointer;
 }
+
+/* Arrow pointing to the anchor */
+.popup-content::after {
+  content: ""; position: absolute; width: 0; height: 0; border: 8px solid transparent;
+}
+.popup-content[data-side="right"]::after { 
+  left: -16px; top: 16px; border-right-color: #fff; 
+}
+.popup-content[data-side="left"]::after { 
+  right: -16px; top: 16px; border-left-color: #fff; 
+}
+
 @media (max-width: 520px) {
   .sunburst-label { font-size: 12px; }
 }
