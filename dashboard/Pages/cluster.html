@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Identifying Right Questions</title>
-    <link rel="stylesheet" href="../Style/style.css">
-    <script src="../app.js" defer></script>
+  <meta charset="UTF-8" />
+  <title>Identifying Right Questions</title>
+  <link rel="stylesheet" href="../Style/style.css" />
+  <!-- D3 for the sunburst -->
+  <script defer src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script defer src="cluster.js" defer></script>
+  <script defer src="../app.js"></script>
 </head>
 <body>
-    <div class="header">Identifying Right Questions</div>
-    <div class="page-content">
-        <p>This is the Cluster page. Add your interactive content here.</p>
-        <button class="back-btn">Back to Home</button>
+  <div class="header">Identifying Right Questions</div>
+
+  <div class="page-content">
+    <!-- <p>This is the Cluster page. Add your interactive content here.</p> -->
+
+    <!-- NEW: Sunburst chart container -->
+    <div id="sunburst-wrapper">
+      <div id="sunburst"></div>
+      <div class="chart-caption">Click a slice to read more</div>
     </div>
+
+    <button class="back-btn">Back to Home</button>
+  </div>
+
+  <!-- NEW: Popup (modal) -->
+  <div id="entry-popup" class="popup hidden" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="popup-content" role="document">
+      <button class="popup-close" aria-label="Close">×</button>
+      <h2 id="popup-title"></h2>
+      <p id="popup-body"></p>
+    </div>
+  </div>
 </body>
 </html>
