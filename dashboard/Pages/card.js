@@ -84,6 +84,7 @@ function renderOpportunities() {
     });
     card.querySelector('.delete-btn').addEventListener('click', () => {
       opportunities.splice(idx, 1);
+      localStorage.setItem('opportunityCards', JSON.stringify(opportunities));
       renderOpportunities();
     });
     // Save button functionality
