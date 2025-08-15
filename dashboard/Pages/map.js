@@ -53,6 +53,7 @@ function renderHeatmap() {
   const canvas = document.createElement('canvas');
   canvas.width = 600;
   canvas.height = 500;
+  canvas.className = 'heatmap-canvas';
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
@@ -62,7 +63,6 @@ function renderHeatmap() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // Draw cells
   for (let y = 0; y < 5; y++) {
     for (let x = 0; x < 5; x++) {
       const score = scoreMatrix[y][x];
@@ -80,7 +80,7 @@ function renderHeatmap() {
   // Draw axis labels
   ctx.font = '16px Arial';
   ctx.fillStyle = '#232525';
-  // Y axis
+  // Y axis labels
   for (let y = 0; y < 5; y++) {
     ctx.save();
     ctx.translate(40, 40 + y*cellH + cellH/2);
@@ -88,33 +88,22 @@ function renderHeatmap() {
     ctx.fillText(yLabels[y], 0, 0);
     ctx.restore();
   }
-  // X axis
+  // X axis labels
   for (let x = 0; x < 5; x++) {
     ctx.fillText(xLabels[x], 60 + x*cellW + cellW/2, 40 + 5*cellH + 24);
   }
+  // X axis name
   ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#1976ff';
   ctx.fillText('Severity of Impact', 320, 40 + 5*cellH + 60);
+  // Y axis name
   ctx.save();
   ctx.translate(20, 290);
   ctx.rotate(-Math.PI/2);
   ctx.font = 'bold 22px Arial';
+  ctx.fillStyle = '#1976ff';
   ctx.fillText('Probability of Occurrence', 0, 0);
   ctx.restore();
-
-  // Draw legend
-  ctx.font = '16px Arial';
-  ctx.fillStyle = colorMap.red;
-  ctx.fillRect(520, 60, 20, 20);
-  ctx.fillStyle = '#232525';
-  ctx.fillText('Critical Risk / Important Opportunity', 550, 70);
-  ctx.fillStyle = colorMap.yellow;
-  ctx.fillRect(520, 90, 20, 20);
-  ctx.fillStyle = '#232525';
-  ctx.fillText('Important Risk / Encouraged Opportunity', 550, 100);
-  ctx.fillStyle = colorMap.green;
-  ctx.fillRect(520, 120, 20, 20);
-  ctx.fillStyle = '#232525';
-  ctx.fillText('Acceptable Risk / Weak Opportunity', 550, 130);
 
   // Draw opportunity points
   const data = getHeatmapData();
