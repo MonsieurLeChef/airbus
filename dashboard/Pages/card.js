@@ -2,8 +2,10 @@
 const cardPage = `
   <div class="header">Identification and Validation of Opportunities</div>
   <div class="card-page-container">
-    <h2 style="margin-top:0; color:#232525;">Opportunity Cards</h2>
-    <button id="add-opportunity" class="add-btn">Add +</button>
+    <div class="card-header-row">
+      <h2 style="margin-top:0; color:#232525;">Opportunity Cards</h2>
+      <button id="add-opportunity" class="add-btn">Add +</button>
+    </div>
     <div id="opportunity-list"></div>
   </div>
 
@@ -25,6 +27,7 @@ const cardPage = `
       </div>
       <div class="card-actions">
         <button class="delete-btn">Delete</button>
+        <button class="save-btn">Save</button>
       </div>
     </div>
   </template>
@@ -83,6 +86,15 @@ function renderOpportunities() {
       opportunities.splice(idx, 1);
       renderOpportunities();
     });
+    // Save button functionality
+    card.querySelector('.save-btn').addEventListener('click', () => {
+      // Save all opportunities to localStorage
+      localStorage.setItem('opportunityCards', JSON.stringify(opportunities));
+      card.querySelector('.save-btn').textContent = 'Saved!';
+      setTimeout(() => {
+        card.querySelector('.save-btn').textContent = 'Save';
+      }, 1200);
+    });
     opportunityList.appendChild(card);
   });
 }
@@ -100,6 +112,13 @@ addBtn.addEventListener('click', () => {
   });
   renderOpportunities();
 });
+
+// Load saved opportunities from localStorage on page load
+const saved = localStorage.getItem('opportunityCards');
+if (saved) {
+  opportunities = JSON.parse(saved);
+  renderOpportunities();
+}
 
 renderOpportunities();
 
