@@ -2,14 +2,20 @@
 // Uses localStorage data from card.js
 
 // Heat map configuration
-const xLabels = ['Trivial', 'Minor', 'Moderate', 'Major', 'Critical'];
-const yLabels = [
-  'Very Unlikely (<5%)',
-  'Not to be Ruled Out (5-25%)',
-  'Possible (25-50%)',
-  'Probable (50-75%)',
-  'Very Likely (>75%)'
+// Generic labels so any scaling metric (1-10) can be mapped
+const xLabels = ['1-2', '3-4', '5-6', '7-8', '9-10'];
+const yLabels = ['1-2', '3-4', '5-6', '7-8', '9-10'];
+
+// Scaling options available on opportunity cards
+const scaleOptions = [
+  { key: 'impact', label: 'Impact' },
+  { key: 'potential', label: 'Potential' },
+  { key: 'fit', label: 'Fit' }
 ];
+
+// Dropdowns for choosing axis metrics
+const xSelect = document.getElementById('x-axis-select');
+const ySelect = document.getElementById('y-axis-select');
 
 const colorMap = {
   green: '#4fd1c5', // Acceptable Risk / Weak Opportunity
@@ -32,17 +38,17 @@ function getCellColor(score) {
   return colorMap.green;
 }
 
-// Map opportunity data to heatmap cells
-function getHeatmapData() {
+// Map opportunity data to heatmap cells based on selected metrics
+function getHeatmapData(xKey, yKey) {
   const saved = localStorage.getItem('opportunityCards');
   if (!saved) return [];
   const opps = JSON.parse(saved);
-  // Map impact (x) and potential (y) to cell
   return opps.map(opp => {
-    // Impact: 1-10, Potential: 1-10
-    // Map to 0-4 index
-    const x = Math.min(4, Math.max(0, Math.floor((opp.impact-1)/2)));
-    const y = 4 - Math.min(4, Math.max(0, Math.floor((opp.potential-1)/2)));
+    // Map 1-10 range to 0-4 index
+    const xVal = opp[xKey] || 1;
+    const yVal = opp[yKey] || 1;
+    const x = Math.min(4, Math.max(0, Math.floor((xVal - 1) / 2)));
+    const y = 4 - Math.min(4, Math.max(0, Math.floor((yVal - 1) / 2)));
     return { x, y, name: opp.name, score: scoreMatrix[y][x], opp };
   });
 }
@@ -56,6 +62,9 @@ function renderHeatmap() {
   canvas.className = 'heatmap-canvas';
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
+
+  const xKey = xSelect.value || 'impact';
+  const yKey = ySelect.value || 'potential';
 
   // Draw grid
   const cellW = 100, cellH = 80;
@@ -80,33 +89,19 @@ function renderHeatmap() {
   // Draw axis labels
   ctx.font = '16px Arial';
   ctx.fillStyle = '#232525';
-  // Y axis labels
   for (let y = 0; y < 5; y++) {
     ctx.save();
     ctx.translate(40, 40 + y*cellH + cellH/2);
-    ctx.rotate(-Math.PI/2);
+    ctx.rotate(-Math.PI / 2);
     ctx.fillText(yLabels[y], 0, 0);
     ctx.restore();
   }
-  // X axis labels
   for (let x = 0; x < 5; x++) {
-    ctx.fillText(xLabels[x], 60 + x*cellW + cellW/2, 40 + 5*cellH + 24);
+    ctx.fillText(xLabels[x], 60 + x * cellW + cellW / 2, 40 + 5 * cellH + 24);
   }
-  // X axis name
-  ctx.font = 'bold 22px Arial';
-  ctx.fillStyle = '#1976ff';
-  ctx.fillText('Severity of Impact', 320, 40 + 5*cellH + 60);
-  // Y axis name
-  ctx.save();
-  ctx.translate(20, 290);
-  ctx.rotate(-Math.PI/2);
-  ctx.font = 'bold 22px Arial';
-  ctx.fillStyle = '#1976ff';
-  ctx.fillText('Probability of Occurrence', 0, 0);
-  ctx.restore();
 
   // Draw opportunity points
-  const data = getHeatmapData();
+  const data = getHeatmapData(xKey, yKey);
   data.forEach(pt => {
     const cx = 60 + pt.x*cellW + cellW/2;
     const cy = 40 + pt.y*cellH + cellH/2;
@@ -120,5 +115,26 @@ function renderHeatmap() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', renderHeatmap);
+// Initialize dropdowns and render when page is ready
+window.addEventListener('DOMContentLoaded', () => {
+  // Populate dropdowns
+  scaleOptions.forEach(opt => {
+    const xOpt = document.createElement('option');
+    xOpt.value = opt.key;
+    xOpt.textContent = opt.label;
+    xSelect.appendChild(xOpt);
+
+    const yOpt = document.createElement('option');
+    yOpt.value = opt.key;
+    yOpt.textContent = opt.label;
+    ySelect.appendChild(yOpt);
+  });
+  // Default selections
+  xSelect.value = 'impact';
+  ySelect.value = 'potential';
+  xSelect.addEventListener('change', renderHeatmap);
+  ySelect.addEventListener('change', renderHeatmap);
+  renderHeatmap();
+});
+
 window.addEventListener('storage', renderHeatmap);

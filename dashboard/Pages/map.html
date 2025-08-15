@@ -12,6 +12,25 @@
       height: 500px;
       margin: 0 auto;
     }
+    .axis-dropdown {
+      position: absolute;
+      background: transparent;
+      border: none;
+      color: #1976ff;
+      font-weight: bold;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    #x-axis-select {
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    #y-axis-select {
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
     </style>
 
 </head>
@@ -20,12 +39,14 @@
 
 
   <!-- Chart container (centered and styled by style.css) -->
-  <div style="display:flex;justify-content:center;width:100%;min-height:80vh;">
+  <div style="display:flex;justify-content:center;width:100%;min-height:80vh;position:relative;">
     <div id="chartdiv"></div>
+    <!-- Axis dropdowns -->
+    <select id="x-axis-select" class="axis-dropdown"></select>
+    <select id="y-axis-select" class="axis-dropdown"></select>
   </div>
 
-    <!-- Reference your map.js file (at the end of <body>) -->
-    <script src="map.js"></script>
+  <script src="map.js"></script>
 
   <button class="back-btn">Back to Home</button>
 </body>
