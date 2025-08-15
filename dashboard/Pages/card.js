@@ -7,6 +7,7 @@ const cardPage = `
       <button id="add-opportunity" class="add-btn">Add +</button>
     </div>
     <div id="opportunity-list"></div>
+    <button class="back-btn" onclick="window.location.href='../Pages/index.html'">Back to Home</button>
   </div>
 
   <template id="card-template">

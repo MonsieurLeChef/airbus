@@ -5,12 +5,31 @@
     <title>Evaluation of Opportunities</title>
     <link rel="stylesheet" href="../Style/style.css">
     <script src="../app.js" defer></script>
+
+    <!-- Styles for the chart container -->
+    <style>
+    #chartdiv {
+      width: 100%;
+      height: 500px;
+      margin: 0 auto;
+    }
+    </style>
+
+    <!-- amCharts resources (add in <head> or before </body>) -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 </head>
 <body>
     <div class="header">Evaluation of Opportunities</div>
-    <div class="page-content">
-        <p>This is the Map page. Add your interactive content here.</p>
+
+
+    <!-- Chart container (place in <body> where you want the heat map to appear) -->
+    <div id="chartdiv"></div>
+
+    <!-- Reference your map.js file (at the end of <body>) -->
+    <script src="map.js"></script>
+
         <button class="back-btn">Back to Home</button>
-    </div>
 </body>
 </html>
