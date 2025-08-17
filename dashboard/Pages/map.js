@@ -1,15 +1,18 @@
 // Interactive Heat Map for Opportunities
 // Uses localStorage data from card.js
 
-// Heat map configuration
-const xLabels = ['Trivial', 'Minor', 'Moderate', 'Major', 'Critical'];
-const yLabels = [
-  'Very Unlikely (<5%)',
-  'Not to be Ruled Out (5-25%)',
-  'Possible (25-50%)',
+// Axis label sets
+const severityLabels = ['Trivial', 'Minor', 'Moderate', 'Major', 'Critical'];
+const probabilityLabels = [
+  'Very Likely (>75%)',
   'Probable (50-75%)',
-  'Very Likely (>75%)'
+  'Possible (25-50%)',
+  'Not to be Ruled Out (5-25%)',
+  'Very Unlikely (<5%)'
 ];
+
+// Current axis orientation
+let axes = { x: 'severity', y: 'probability' };
 
 const colorMap = {
   green: '#4fd1c5', // Acceptable Risk / Weak Opportunity
@@ -26,6 +29,10 @@ const scoreMatrix = [
   [1, 2, 3, 4, 5]
 ];
 
+function transpose(matrix) {
+  return matrix[0].map((_, i) => matrix.map(row => row[i]));
+}
+
 function getCellColor(score) {
   if (score >= 15) return colorMap.red;
   if (score >= 6) return colorMap.yellow;
@@ -33,17 +40,23 @@ function getCellColor(score) {
 }
 
 // Map opportunity data to heatmap cells
-function getHeatmapData() {
+function getHeatmapData(matrix) {
   const saved = localStorage.getItem('opportunityCards');
   if (!saved) return [];
   const opps = JSON.parse(saved);
-  // Map impact (x) and potential (y) to cell
   return opps.map(opp => {
-    // Impact: 1-10, Potential: 1-10
-    // Map to 0-4 index
-    const x = Math.min(4, Math.max(0, Math.floor((opp.impact-1)/2)));
-    const y = 4 - Math.min(4, Math.max(0, Math.floor((opp.potential-1)/2)));
-    return { x, y, name: opp.name, score: scoreMatrix[y][x], opp };
+    const impactIndex = Math.min(4, Math.max(0, Math.floor((opp.impact - 1) / 2)));
+    const probIndex = Math.min(4, Math.max(0, Math.floor((opp.potential - 1) / 2)));
+    let x, y;
+    if (axes.x === 'severity') {
+      x = impactIndex;
+      y = 4 - probIndex;
+    } else {
+      x = probIndex;
+      y = 4 - impactIndex;
+    }
+    const score = matrix[y][x];
+    return { x, y, name: opp.name, score, opp };
   });
 }
 
@@ -57,6 +70,16 @@ function renderHeatmap() {
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
+  const matrix = axes.x === 'severity'
+    ? scoreMatrix
+    : transpose(scoreMatrix).reverse().map(row => row.slice().reverse());
+  const xLabels = axes.x === 'severity'
+    ? severityLabels
+    : probabilityLabels.slice().reverse();
+  const yLabels = axes.y === 'probability'
+    ? probabilityLabels
+    : severityLabels.slice().reverse();
+
   // Draw grid
   const cellW = 100, cellH = 80;
   ctx.font = '16px Arial';
@@ -65,7 +88,7 @@ function renderHeatmap() {
 
   for (let y = 0; y < 5; y++) {
     for (let x = 0; x < 5; x++) {
-      const score = scoreMatrix[y][x];
+      const score = matrix[y][x];
       ctx.fillStyle = getCellColor(score);
       ctx.fillRect(60 + x*cellW, 40 + y*cellH, cellW, cellH);
       ctx.strokeStyle = '#fff';
@@ -80,7 +103,6 @@ function renderHeatmap() {
   // Draw axis labels
   ctx.font = '16px Arial';
   ctx.fillStyle = '#232525';
-  // Y axis labels
   for (let y = 0; y < 5; y++) {
     ctx.save();
     ctx.translate(40, 40 + y*cellH + cellH/2);
@@ -88,25 +110,25 @@ function renderHeatmap() {
     ctx.fillText(yLabels[y], 0, 0);
     ctx.restore();
   }
-  // X axis labels
   for (let x = 0; x < 5; x++) {
     ctx.fillText(xLabels[x], 60 + x*cellW + cellW/2, 40 + 5*cellH + 24);
   }
-  // X axis name
+
+  const xName = axes.x === 'severity' ? 'Severity of Impact' : 'Probability of Occurrence';
+  const yName = axes.y === 'probability' ? 'Probability of Occurrence' : 'Severity of Impact';
   ctx.font = 'bold 22px Arial';
   ctx.fillStyle = '#1976ff';
-  ctx.fillText('Severity of Impact', 320, 40 + 5*cellH + 60);
-  // Y axis name
+  ctx.fillText(xName, 320, 40 + 5*cellH + 60);
   ctx.save();
   ctx.translate(20, 290);
   ctx.rotate(-Math.PI/2);
   ctx.font = 'bold 22px Arial';
   ctx.fillStyle = '#1976ff';
-  ctx.fillText('Probability of Occurrence', 0, 0);
+  ctx.fillText(yName, 0, 0);
   ctx.restore();
 
   // Draw opportunity points
-  const data = getHeatmapData();
+  const data = getHeatmapData(matrix);
   data.forEach(pt => {
     const cx = 60 + pt.x*cellW + cellW/2;
     const cy = 40 + pt.y*cellH + cellH/2;
@@ -120,5 +142,17 @@ function renderHeatmap() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', renderHeatmap);
-window.addEventListener('storage', renderHeatmap);
+window.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('axisSelect');
+  if (select) {
+    select.addEventListener('change', () => {
+      axes = select.value === 'impact-x'
+        ? { x: 'severity', y: 'probability' }
+        : { x: 'probability', y: 'severity' };
+      renderHeatmap();
+    });
+  }
+  renderHeatmap();
+});
+
+window.addEventListener('storage', () => renderHeatmap());
