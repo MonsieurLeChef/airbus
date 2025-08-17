@@ -4,27 +4,51 @@
   <meta charset="UTF-8" />
   <title>Identifying Right Questions</title>
   <link rel="stylesheet" href="../Style/style.css" />
-  <!-- D3 for the sunburst -->
   <script defer src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-  <script defer src="cluster.js" defer></script>
+  <script defer src="cluster.js"></script>
   <script defer src="../app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {margin:0;min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);font-family:'Inter',system-ui,sans-serif;color:#fff;overflow-x:hidden;}
+    .header {background:linear-gradient(135deg,#0a6cff 0%,#3b82f6 60%,#2563eb 100%);padding:38px 0 26px;font-size:2.1rem;font-weight:700;letter-spacing:1px;box-shadow:0 8px 32px rgba(10,108,255,.28),0 0 0 1px rgba(255,255,255,.08);position:relative;overflow:hidden;text-align:center;}
+    .header:before {content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.15),transparent);mix-blend-mode:overlay;animation:shine 6s linear infinite;}
+    @keyframes shine {0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+    .sunburst-layout {display:flex;justify-content:center;align-items:center;flex-direction:column;gap:40px;padding:40px 32px 70px;max-width:1300px;margin:0 auto;}
+    .sunburst-shell {position:relative;padding:48px 48px 56px;border-radius:32px;max-width:900px;width:100%;backdrop-filter:blur(28px);background:linear-gradient(135deg,rgba(10,108,255,.92),rgba(59,130,246,.88),rgba(37,99,235,.85));box-shadow:0 25px 60px -10px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.25);overflow:hidden;}
+    .sunburst-shell:before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,rgba(255,255,255,.07),transparent 35%,rgba(255,255,255,.07) 70%,transparent);animation:spin 22s linear infinite;}
+    @keyframes spin {to{transform:rotate(360deg);}}
+    #sunburst-wrapper {width:100%;max-width:720px;margin:0 auto;}
+    #sunburst {width:100%;aspect-ratio:1/1;}
+    #sunburst svg {width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 8px 22px rgba(0,0,0,.5));}
+    .sunburst-label {font:600 15px/1.2 'Inter',sans-serif;fill:#0f172a;text-shadow:0 1px 3px rgba(255,255,255,.7);pointer-events:none;}
+    .sunburst-slice-label {font:500 14px/1.25 'Inter',sans-serif;fill:#111;text-shadow:0 1px 3px rgba(255,255,255,.7);pointer-events:none;}
+    .sunburst-slice {transition:filter .25s,transform .25s;transform-origin:0 0;}
+    .sunburst-slice:hover {filter:brightness(1.12) drop-shadow(0 4px 12px rgba(0,0,0,.45));}
+    .slice-active {stroke:#fff;stroke-width:3px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.45));}
+    .chart-caption {margin-top:14px;font-size:.85rem;letter-spacing:.5px;color:#e2e8f0;text-transform:uppercase;font-weight:600;opacity:.85;text-align:center;}
+    .back-btn {background:linear-gradient(135deg,#0a6cff 0%,#3b82f6 100%);border:1px solid rgba(255,255,255,.2);box-shadow:0 4px 15px rgba(10,108,255,.35);backdrop-filter:blur(10px);font-weight:600;letter-spacing:.5px;padding:14px 28px;font-size:1rem;border-radius:14px;cursor:pointer;color:#fff;transition:.35s;}
+    .back-btn:hover {transform:translateY(-3px);box-shadow:0 10px 30px rgba(10,108,255,.55);}
+    /* Popup overrides for glass look */
+    .popup-content {background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(240,247,255,.9));border:1px solid rgba(0,0,0,.06);box-shadow:0 20px 48px -12px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.5);}
+    .popup-close {color:#0f172a;}
+    @media (max-width:900px){.sunburst-shell{padding:36px 32px 48px;border-radius:28px;}#sunburst-wrapper{max-width:560px;}}
+    @media (max-width:640px){.sunburst-shell{padding:28px 24px 40px;}#sunburst-wrapper{max-width:480px;}.sunburst-label{font-size:13px}.sunburst-slice-label{font-size:12px}}
+  </style>
 </head>
 <body>
   <div class="header">Identifying Right Questions</div>
-
-  <div class="page-content">
-    <!-- <p>This is the Cluster page. Add your interactive content here.</p> -->
-
-    <!-- NEW: Sunburst chart container -->
-    <div id="sunburst-wrapper">
-      <div id="sunburst"></div>
-      <div class="chart-caption">Click a slice to read more</div>
+  <div class="sunburst-layout">
+    <div class="sunburst-shell">
+      <div id="sunburst-wrapper">
+        <div id="sunburst"></div>
+        <div class="chart-caption">Click a slice to read more</div>
+      </div>
     </div>
-
     <button class="back-btn">Back to Home</button>
   </div>
 
-  <!-- NEW: Popup (modal) -->
   <div id="entry-popup" class="popup hidden" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="popup-content" role="document">
       <button class="popup-close" aria-label="Close">×</button>

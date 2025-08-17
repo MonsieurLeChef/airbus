@@ -6,12 +6,73 @@
     <link rel="stylesheet" href="../Style/style.css">
     <script src="../app.js" defer></script>
     <script src="card.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {margin:0;min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);font-family:'Inter',system-ui,sans-serif;color:#fff;overflow-x:hidden;}
+      .header {background:linear-gradient(135deg,#0a6cff 0%,#3b82f6 60%,#2563eb 100%);padding:38px 0 26px;font-size:2.1rem;font-weight:700;letter-spacing:1px;box-shadow:0 8px 32px rgba(10,108,255,.28),0 0 0 1px rgba(255,255,255,.08);position:relative;overflow:hidden;text-align:center;}
+      .header:before {content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.15),transparent);mix-blend-mode:overlay;animation:shine 6s linear infinite;}
+      @keyframes shine {0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+      .card-glass {position:relative;padding:48px 48px 56px;border-radius:32px;max-width:900px;width:100%;backdrop-filter:blur(28px);background:linear-gradient(135deg,rgba(10,108,255,.92),rgba(59,130,246,.88),rgba(37,99,235,.85));box-shadow:0 25px 60px -10px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.25);overflow:hidden;margin:48px auto 0;}
+      .card-glass:before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,rgba(255,255,255,.07),transparent 35%,rgba(255,255,255,.07) 70%,transparent);animation:spin 22s linear infinite;}
+      @keyframes spin {to{transform:rotate(360deg);}}
+      .back-btn {background:linear-gradient(135deg,#0a6cff 0%,#3b82f6 100%);border:1px solid rgba(255,255,255,.2);box-shadow:0 4px 15px rgba(10,108,255,.35);backdrop-filter:blur(10px);font-weight:600;letter-spacing:.5px;padding:14px 28px;font-size:1rem;border-radius:14px;cursor:pointer;color:#fff;transition:.35s;}
+      .back-btn:hover {transform:translateY(-3px);box-shadow:0 10px 30px rgba(10,108,255,.55);}
+      @media (max-width:900px){.card-glass{padding:36px 32px 48px;border-radius:28px;}}
+      @media (max-width:640px){.card-glass{padding:28px 16px 32px;}}
+    </style>
 </head>
 <body>
-    <div class="header">Identification and Validation of Opportunities</div>
-    <div class="page-content">
-        <p>This is the Card page. Add your interactive content here.</p>
-        <button class="back-btn">Back to Home</button>
-    </div>
+        <div class="header">Identification and Validation of Opportunities</div>
+        <!-- Animated rotating squares background -->
+        <div class="rotating-bg">
+            <div class="square square1"></div>
+            <div class="square square2"></div>
+            <div class="square square3"></div>
+        </div>
+        <div class="card-glass">
+                <div id="opportunity-list"></div>
+                <button class="back-btn">Back to Home</button>
+        </div>
+        <style>
+            .rotating-bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                overflow: hidden;
+            }
+            .square {
+                position: absolute;
+                border-radius: 24px;
+                opacity: 0.18;
+                background: linear-gradient(135deg, #3b82f6 0%, #0a6cff 100%);
+                box-shadow: 0 8px 32px rgba(10,108,255,0.18);
+                border: 1.5px solid rgba(255,255,255,0.12);
+                animation: rotateSquare 22s linear infinite;
+            }
+            .square1 {
+                width: 340px; height: 340px;
+                top: 8%; left: 10%;
+                animation-delay: 0s;
+            }
+            .square2 {
+                width: 220px; height: 220px;
+                bottom: 12%; right: 14%;
+                animation-delay: 7s;
+            }
+            .square3 {
+                width: 180px; height: 180px;
+                top: 60%; left: 60%;
+                animation-delay: 13s;
+            }
+            @keyframes rotateSquare {
+                0% { transform: rotate(0deg) scale(1); }
+                50% { transform: rotate(180deg) scale(1.08); }
+                100% { transform: rotate(360deg) scale(1); }
+            }
+            .card-glass { position: relative; z-index: 1; }
+        </style>
 </body>
 </html>

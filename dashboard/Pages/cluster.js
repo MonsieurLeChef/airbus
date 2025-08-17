@@ -131,7 +131,8 @@ function computeAnchor(d, innerHole, radius) {
     const svg = d3
       .select(container)
       .append("svg")
-      .attr("viewBox", [-radius, -radius, width+100, height+100].join(" "))
+      // Center chart precisely: no asymmetric +100 padding which pushed it left
+      .attr("viewBox", [-radius, -radius, width, height].join(" "))
       .attr("aria-labelledby", "sunburstTitle")
       .attr("role", "img");
 
@@ -150,6 +151,7 @@ function computeAnchor(d, innerHole, radius) {
       .enter()
       .append("path")
       .attr("d", arc)
+      .attr("class","sunburst-slice")
       .attr("fill", (d) => {
         const top = d.ancestors().find((a) => a.depth === 1) || d;
         const base = d3.color(catColors(top.data.name));
