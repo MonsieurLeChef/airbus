@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Identification and Validation of Opportunities</title>
-    <link rel="stylesheet" href="../Style/style.css">
-    <script src="../app.js" defer></script>
-    <script src="card.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Identification and Validation of Opportunities</title>
+  <link rel="stylesheet" href="../Style/style.css">
+  <script src="../app.js" defer></script>
+  <script src="card.js" defer></script>
 </head>
-<body>
-    <div class="header">Identification and Validation of Opportunities</div>
-    <div class="page-content">
-        <p>This is the Card page. Add your interactive content here.</p>
-        <button class="back-btn">Back to Home</button>
+<body class="card-page">
+  <div class="header">Identification and Validation of Opportunities</div>
+  <div class="card-page-container">
+    <div class="card-header-row">
+      <h2 class="card-title">Opportunity Cards</h2>
+      <button id="add-opportunity" class="add-btn">Add +</button>
     </div>
+    <div id="opportunity-list"></div>
+    <button class="back-btn" onclick="window.location.href='../Pages/index.html'">Back to Home</button>
+  </div>
+
+  <template id="card-template">
+    <div class="opportunity-card">
+      <div class="card-attributes">
+        <input type="text" class="opp-name" placeholder="Opportunity Name" />
+        <h3 class="section-header">Attributes</h3>
+        <div class="field-row"><label>Category:</label><input type="text" class="opp-category" /></div>
+        <div class="field-row"><label>Type:</label><input type="text" class="opp-type" /></div>
+        <div class="field-row"><label>Risk:</label><input type="text" class="opp-risk" /></div>
+        <div class="field-row"><label>Scalability:</label><input type="text" class="opp-scalability" /></div>
+      </div>
+      <div class="card-scaling">
+        <h3 class="section-header">Scaling</h3>
+        <div class="slider-row"><label>Potential</label><input type="range" min="1" max="10" value="5" step="1" class="opp-potential"/><span class="slider-value">5</span></div>
+        <div class="slider-row"><label>Impact</label><input type="range" min="1" max="10" value="5" step="1" class="opp-impact"/><span class="slider-value">5</span></div>
+        <div class="slider-row"><label>Fit</label><input type="range" min="1" max="10" value="5" step="1" class="opp-fit"/><span class="slider-value">5</span></div>
+      </div>
+      <div class="card-actions">
+        <button class="delete-btn">Delete</button>
+        <button class="save-btn">Save</button>
+      </div>
+    </div>
+  </template>
 </body>
 </html>

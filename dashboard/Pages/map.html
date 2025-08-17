@@ -5,27 +5,23 @@
     <title>Evaluation of Opportunities</title>
     <link rel="stylesheet" href="../Style/style.css">
     <script src="../app.js" defer></script>
-    <!-- Styles for the chart container -->
-    <style>
-    #chartdiv {
-      width: 100%;
-      height: 500px;
-      margin: 0 auto;
-    }
-    </style>
-
 </head>
 <body>
   <div class="header" style="margin-bottom: 0;">Evaluation of Opportunities</div>
 
-
-  <!-- Chart container (centered and styled by style.css) -->
-  <div style="display:flex;justify-content:center;width:100%;min-height:80vh;">
+  <div class="heatmap-page">
+    <div class="axis-controls">
+      <label for="axisSelect">Axis orientation:</label>
+      <select id="axisSelect">
+        <option value="impact-x">Impact on X-axis</option>
+        <option value="impact-y">Impact on Y-axis</option>
+      </select>
+    </div>
     <div id="chartdiv"></div>
   </div>
 
-    <!-- Reference your map.js file (at the end of <body>) -->
-    <script src="map.js"></script>
+  <!-- Reference your map.js file (at the end of <body>) -->
+  <script src="map.js"></script>
 
   <button class="back-btn">Back to Home</button>
 </body>
