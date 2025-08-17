@@ -59,6 +59,11 @@
   padding: 32px 64px;
   gap: 64px;
   align-items: flex-start;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.opportunity-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 .card-attributes {
   flex: 1.2;
@@ -153,8 +158,17 @@ body {
     color: #fff;
     margin: 0;
 }
+.card-title {
+  margin-top: 0;
+  color: #232525;
+}
+body.card-page {
+  background: #eef1f8;
+  color: #232525;
+}
 .header {
     background: #0a6cff;
+    color: #fff;
     padding: 2em 0 1em 0;
     text-align: center;
     font-size: 2em;
