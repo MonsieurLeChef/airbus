@@ -280,57 +280,134 @@ function renderHeatmap() {
   addAxisDropdownFunctionality();
 }
 
+// Create (or reuse) a tooltip and give it baseline styles
+function ensureTooltip() {
+  let t = document.getElementById('tooltip');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'tooltip';
+    document.body.appendChild(t);
+  }
+  Object.assign(t.style, {
+    position: 'fixed',
+    zIndex: '9999',
+    padding: '8px 10px',
+    background: 'rgba(255,255,255,0.98)',
+    border: '1px solid rgba(0,0,0,0.1)',
+    borderRadius: '10px',
+    boxShadow: '0 8px 22px rgba(0,0,0,0.15)',
+    fontFamily: 'Inter, Arial, sans-serif',
+    fontSize: '12px',
+    color: '#111827',
+    pointerEvents: 'none',   // tooltip won't block clicks
+    display: 'none'          // toggled by JS below
+  });
+  return t;
+}
+
 function addHoverFunctionality(canvas, data) {
   const tooltip = document.getElementById('tooltip');
   let currentHoveredPoint = null;
-  
-  canvas.addEventListener('mousemove', (e) => {
+
+  // Keep CSS hover transform; just make origin predictable
+  canvas.style.transformOrigin = 'top left';
+
+  function toCanvasXY(evt) {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Check if mouse is over any opportunity point
-    const hoveredPoint = data.find(pt => {
-      const distance = Math.sqrt((x - pt.canvasX) ** 2 + (y - pt.canvasY) ** 2);
-      return distance <= 25; // Increased hover radius for better responsiveness
-    });
-    
+    const cs = getComputedStyle(canvas);
+
+    const pl = parseFloat(cs.paddingLeft)   || 0;
+    const pr = parseFloat(cs.paddingRight)  || 0;
+    const pt = parseFloat(cs.paddingTop)    || 0;
+    const pb = parseFloat(cs.paddingBottom) || 0;
+
+    const bl = parseFloat(cs.borderLeftWidth)   || 0;
+    const br = parseFloat(cs.borderRightWidth)  || 0;
+    const bt = parseFloat(cs.borderTopWidth)    || 0;
+    const bb = parseFloat(cs.borderBottomWidth) || 0;
+
+    const contentW = rect.width  - pl - pr - bl - br;
+    const contentH = rect.height - pt - pb - bt - bb;
+
+    const scaleX = canvas.width  / contentW;
+    const scaleY = canvas.height / contentH;
+
+    return {
+      x: (evt.clientX - rect.left - pl - bl) * scaleX,
+      y: (evt.clientY - rect.top  - pt - bt) * scaleY
+    };
+  }
+
+  function showTooltip(html, clientX, clientY) {
+    tooltip.innerHTML = html;
+    tooltip.classList.add('show');
+
+    // position in viewport space (since #tooltip is absolute on body)
+    const pad = 12;
+    const tw = tooltip.offsetWidth  || 180;
+    const th = tooltip.offsetHeight || 60;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let left = clientX + 14;
+    let top  = clientY - 24;
+
+    if (left + tw + pad > vw) left = clientX - tw - 14;
+    if (top  + th + pad > vh) top  = vh - th - pad;
+    if (top < pad) top = pad;
+
+    tooltip.style.left = left + 'px';
+    tooltip.style.top  = top  + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.classList.remove('show');
+  }
+
+  function handleMove(e) {
+    const { x, y } = toCanvasXY(e);
+
+    // hit-test against the drawn circles (radius ~16). Use a generous radius.
+    const R2 = 26 * 26;
+    let hoveredPoint = null;
+
+    for (let i = 0; i < data.length; i++) {
+      const dx = x - data[i].canvasX;
+      const dy = y - data[i].canvasY;
+      if (dx*dx + dy*dy <= R2) { hoveredPoint = data[i]; break; }
+    }
+
     if (hoveredPoint && hoveredPoint !== currentHoveredPoint) {
       currentHoveredPoint = hoveredPoint;
-      tooltip.innerHTML = `
+      showTooltip(`
         <strong>${hoveredPoint.name || 'Opportunity'}</strong><br>
         ${currentXAxis}: ${hoveredPoint.xValue}/10<br>
         ${currentYAxis}: ${hoveredPoint.yValue}/10<br>
         Score: ${hoveredPoint.score}
-      `;
-      tooltip.style.left = e.clientX + 10 + 'px';
-      tooltip.style.top = e.clientY - 30 + 'px';
-      tooltip.classList.add('show');
-      
-      // Add hover effect to canvas
+      `, e.clientX, e.clientY);
       canvas.style.cursor = 'pointer';
-      canvas.style.transform = 'scale(1.02)';
-      canvas.style.transition = 'transform 0.2s ease';
     } else if (!hoveredPoint && currentHoveredPoint) {
       currentHoveredPoint = null;
-      tooltip.classList.remove('show');
+      hideTooltip();
       canvas.style.cursor = 'default';
-      canvas.style.transform = 'scale(1)';
+    } else if (hoveredPoint) {
+      // keep tooltip following while staying on the same point
+      showTooltip(tooltip.innerHTML, e.clientX, e.clientY);
     }
-  });
-  
-  canvas.addEventListener('mouseleave', () => {
+  }
+
+  canvas.addEventListener('pointermove', handleMove);
+  canvas.addEventListener('pointerleave', () => {
     currentHoveredPoint = null;
-    tooltip.classList.remove('show');
+    hideTooltip();
     canvas.style.cursor = 'default';
-    canvas.style.transform = 'scale(1)';
   });
-  
-  // Prevent tooltip from interfering with dropdown clicks
-  tooltip.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
+
+  // don't let tooltip block clicks elsewhere
+  tooltip.addEventListener('click', (e) => e.stopPropagation());
 }
+
+
 
 function addAxisDropdownFunctionality() {
   const xAxisDropdown = document.getElementById('x-axis-dropdown');
