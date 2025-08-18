@@ -29,9 +29,9 @@ const colorMap = {
 
 function getCellColor(score) {
   // Dynamic color based on score (max score is 100 for 10x10)
-  if (score >= 50) return colorMap.red;
-  if (score >= 20) return colorMap.yellow;
-  return colorMap.green;
+  if (score > (maxnum**2)*50/100) return colorMap.green;
+  if (score > (maxnum**2)*20/100) return colorMap.yellow;
+  return colorMap.red;
 }
 
 function adjustBrightness(hex, percent) {
@@ -81,8 +81,8 @@ function renderHeatmap() {
   const container = document.getElementById('chartdiv');
   container.innerHTML = '';
   const canvas = document.createElement('canvas');
-  canvas.width = (maxnum+4.5) * 100;
-  canvas.height = (maxnum+4.8) * 80;
+  canvas.width = (maxnum+2) * 120;
+  canvas.height = (maxnum+2) * 100;
   canvas.className = 'heatmap-canvas';
   canvas.style.display = 'block';
   canvas.style.margin = '0 auto';
@@ -207,11 +207,11 @@ function renderHeatmap() {
   ctx.shadowBlur = 3;
   ctx.shadowOffsetX = 1;
   ctx.shadowOffsetY = 1;
-  ctx.fillText(currentXAxis, maxnum/2*145, 40 + maxnum*cellH + 80);
+  ctx.fillText(currentXAxis, (maxnum+2)/2*120, 40 + maxnum*cellH + 80);
   
   // Y axis name
   ctx.save();
-  ctx.translate(30, 525);
+  ctx.translate(30, maxnum/2*100+40);
   ctx.rotate(-Math.PI/2);
   ctx.font = 'bold 20px Inter, Arial';
   ctx.fillStyle = '#0a6cff';
