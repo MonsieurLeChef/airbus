@@ -27,11 +27,11 @@ let maxnum = getMaxNum();
 // Dynamic labels based on selected axes
 function getXLabels(axis) {
   // Optionally, customize labels per axis
-  return ['Very Low', 'Low', 'Medium', 'High', 'Very High', '6', '7', '8', '9', '10'];
+  return ['Maximum', 'Extremely High', 'Very High', 'High', 'Moderately High', 'Medium', 'Moderately Low', 'Low', 'Very Low', 'Extremely Low'];
 }
 
 function getYLabels(axis) {
-  return ['Very Low', 'Low', 'Medium', 'High', 'Very High', '6', '7', '8', '9', '10'];
+  return ['Extremely Low', 'Very Low', 'Low', 'Moderately Low', 'Medium', 'Moderately High', 'High', 'Very High', 'Extremely High', 'Maximum'];
 }
 
 const colorMap = {

@@ -144,17 +144,13 @@
 
     
     .header {
-      background: linear-gradient(135deg, 
-        rgba(10, 108, 255, 0.95) 0%, 
-        rgba(59, 130, 246, 0.9) 50%,
-        rgba(37, 99, 235, 0.85) 100%);
-      box-shadow: 
-        0 8px 32px rgba(10, 108, 255, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-      overflow: hidden;
+  background: linear-gradient(135deg, #0a6cff 0%, #3b82f6 60%, #2563eb 100%);
+  box-shadow: 0 8px 32px rgba(10,108,255,.28),0 0 0 1px rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+  padding: 38px 0 26px;
     }
     
     .header::before {
@@ -415,8 +411,9 @@
 
 </head>
 <body>
-  <div class="header" style="margin-bottom: 0; position: relative;">
-    Evaluation of Opportunities
+  <div class="header" style="margin-bottom: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+    <img src="Airbus_Logo.png" alt="Airbus Logo" style="height:60px; position: absolute; left: 32px; top: 50%; transform: translateY(-50%);" />
+    <span style="font-size:2.1rem;font-weight:700;letter-spacing:1px;">Evaluation of Opportunities</span>
     <a href="settings.html" style="position: absolute; right: 32px; top: 50%; transform: translateY(-50%); display: flex; align-items: center;">
       <img src="gear.svg" alt="Settings" style="width:32px;height:32px;filter:drop-shadow(0 2px 8px rgba(10,108,255,0.18));cursor:pointer;" />
     </a>
