@@ -86,7 +86,9 @@
        position: relative;
        overflow: hidden;
        flex: 1;
-       max-width: 900px;
+  max-width: 1200px;
+  min-width: 900px;
+  min-height: 800px;
      }
     
     .heatmap-container::before {
@@ -138,18 +140,7 @@
       transform: translateY(0) scale(1);
     }
     
-    .tooltip::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 6px solid rgba(15, 23, 42, 0.95);
-    }
+
     
     .header {
       background: linear-gradient(135deg, 

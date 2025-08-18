@@ -367,32 +367,35 @@ function addHoverFunctionality(canvas, data) {
   function handleMove(e) {
     const { x, y } = toCanvasXY(e);
 
-    // hit-test against the drawn circles (radius ~16). Use a generous radius.
+    // hit-test: collect all points in the same cell (radius ~26)
     const R2 = 26 * 26;
-    let hoveredPoint = null;
-
+    let hoveredPoints = [];
     for (let i = 0; i < data.length; i++) {
       const dx = x - data[i].canvasX;
       const dy = y - data[i].canvasY;
-      if (dx*dx + dy*dy <= R2) { hoveredPoint = data[i]; break; }
+      if (dx*dx + dy*dy <= R2) hoveredPoints.push(data[i]);
     }
 
-    if (hoveredPoint && hoveredPoint !== currentHoveredPoint) {
-      currentHoveredPoint = hoveredPoint;
-      showTooltip(`
-        <strong>${hoveredPoint.name || 'Opportunity'}</strong><br>
-        ${currentXAxis}: ${hoveredPoint.xValue}/10<br>
-        ${currentYAxis}: ${hoveredPoint.yValue}/10<br>
-        Score: ${hoveredPoint.score}
-      `, e.clientX, e.clientY);
+    if (hoveredPoints.length > 0) {
+      // Only update tooltip if the set of hovered points changes
+      const names = hoveredPoints.map(p => p.name).join('|');
+      if (!currentHoveredPoint || currentHoveredPoint.names !== names) {
+        currentHoveredPoint = { names };
+        // Build tooltip for all points
+        let html = hoveredPoints.map(pt => `
+          Score: ${pt.score}<br>
+          <strong>${pt.name || 'Opportunity'}</strong><br>
+
+        `).join('<hr style="margin:6px 0;border:none;border-top:1px solid #e5e7eb;">');
+        showTooltip(html, e.clientX, e.clientY);
+      } else {
+        showTooltip(tooltip.innerHTML, e.clientX, e.clientY);
+      }
       canvas.style.cursor = 'pointer';
-    } else if (!hoveredPoint && currentHoveredPoint) {
+    } else if (currentHoveredPoint) {
       currentHoveredPoint = null;
       hideTooltip();
       canvas.style.cursor = 'default';
-    } else if (hoveredPoint) {
-      // keep tooltip following while staying on the same point
-      showTooltip(tooltip.innerHTML, e.clientX, e.clientY);
     }
   }
 
