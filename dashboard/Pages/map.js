@@ -25,14 +25,7 @@ const colorMap = {
   red: '#ef4444' // Critical Risk / Important Opportunity - Modern red
 };
 
-// Score matrix for coloring (from image)
-const scoreMatrix = [
-  [5, 10, 15, 20, 25],
-  [4, 8, 12, 16, 20],
-  [3, 6, 9, 12, 15],
-  [2, 4, 6, 8, 10],
-  [1, 2, 3, 4, 5]
-];
+
 
 function getCellColor(score) {
   // Dynamic color based on score (max score is 100 for 10x10)
@@ -64,9 +57,10 @@ function getHeatmapData() {
     const yValue = opp[currentYAxis.toLowerCase()] || 5;
     
     // Map 1-10 values to 0-4 grid indices
-    const x = Math.min(4, Math.max(0, Math.floor((xValue-1)/2)));
-    const y = 4 - Math.min(4, Math.max(0, Math.floor((yValue-1)/2)));
-    
+    // const x = Math.min(4, Math.max(0, Math.floor((xValue-1)/2)));
+    // const y = 4 - Math.min(4, Math.max(0, Math.floor((yValue-1)/2)));
+    const x= xValue - 1; // 0-9 for 1-10 scale
+    const y= maxnum-yValue; // 0-9 for 1-10 scale
     // Calculate score based on the two selected axes
     const score = xValue * yValue;
     
@@ -81,13 +75,14 @@ function getHeatmapData() {
     };
   });
 }
+const maxnum = 10;
 
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
   container.innerHTML = '';
   const canvas = document.createElement('canvas');
-  canvas.width = 800;
-  canvas.height = 650;
+  canvas.width = (maxnum+4.5) * 100;
+  canvas.height = (maxnum+4.8) * 80;
   canvas.className = 'heatmap-canvas';
   canvas.style.display = 'block';
   canvas.style.margin = '0 auto';
@@ -119,12 +114,12 @@ function renderHeatmap() {
   ctx.font = '16px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-
-  for (let y = 0; y < 5; y++) {
-    for (let x = 0; x < 5; x++) {
+  
+  for (let y = 0; y < maxnum; y++) {
+    for (let x = 0; x < maxnum; x++) {
       // Calculate score based on grid position (1-10 scale)
-      const xValue = x * 2 + 1; // 1, 3, 5, 7, 9
-      const yValue = (4 - y) * 2 + 1; // 9, 7, 5, 3, 1
+      const xValue = x +1 //* 2 + 1; // 1, 3, 5, 7, 9
+      const yValue = maxnum-y//) * 2 + 1; // 9, 7, 5, 3, 1
       const score = xValue * yValue;
       
       const cellX = gridStartX + x*cellW;
@@ -192,7 +187,7 @@ function renderHeatmap() {
   const currentYLabels = getYLabels(currentYAxis);
   
   // Y axis labels
-  for (let y = 0; y < 5; y++) {
+  for (let y = 0; y < maxnum; y++) {
     ctx.save();
     ctx.translate(70, 40 + y*cellH + cellH/2);
     ctx.rotate(-Math.PI/2);
@@ -200,8 +195,8 @@ function renderHeatmap() {
     ctx.restore();
   }
   // X axis labels
-  for (let x = 0; x < 5; x++) {
-    ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + 5*cellH + 24);
+  for (let x = 0; x < maxnum; x++) {
+    ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + maxnum*cellH + 24);
   }
   // X axis name with enhanced styling
   ctx.font = 'bold 24px Inter, Arial';
@@ -212,11 +207,11 @@ function renderHeatmap() {
   ctx.shadowBlur = 3;
   ctx.shadowOffsetX = 1;
   ctx.shadowOffsetY = 1;
-  ctx.fillText(currentXAxis, 420, 40 + 5*cellH + 80);
+  ctx.fillText(currentXAxis, maxnum/2*145, 40 + maxnum*cellH + 80);
   
   // Y axis name
   ctx.save();
-  ctx.translate(30, 325);
+  ctx.translate(30, 525);
   ctx.rotate(-Math.PI/2);
   ctx.font = 'bold 20px Inter, Arial';
   ctx.fillStyle = '#0a6cff';
