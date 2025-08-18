@@ -9,78 +9,108 @@
         name: "Team",
         info: "Questions about the people doing the work.",
         children: [
-          {
-            name: "Roles & Responsibilities",
-            info:
-              "Are roles clear and complementary? Who owns decisions and deliverables?",
-          },
-          {
-            name: "Skills & Training",
-            info:
-              "Do we have the right skills and learning pathways to deliver this successfully?",
-          },
-        ],
+      {
+        name: "Skills optimization",
+        info: "Is there any individual improvement that leads to a strong team and organization?\n\n"
       },
       {
-        name: "Organisation",
+        name: "Work-model optimization",
+        info: "Is there any possibility for improving hybrid models?\n\n"
+      }
+    ]
+  },
+  {
+    name: "Organisation",
+    info: "Questions about structures, processes and support within the organisation.",
+    children: [
+      {
+        name: "Excellence in Safety",
         info:
-          "Questions about structures, processes and support within the organisation.",
-        children: [
-          {
-            name: "Strategy Alignment",
-            info:
-              "How does this initiative link to company strategy and OKRs? What outcomes matter most?",
-          },
-          {
-            name: "Processes",
-            info:
-              "Are processes lean and documented? Any handoff or approval bottlenecks?",
-          },
-          {
-            name: "Resources",
-            info:
-              "Do we have budget, tools, and capacity? What trade-offs are required?",
-          },
-          {
-            name: "Leadership Support",
-            info:
-              "Is sponsorship active and visible? Are we removing blockers fast enough?",
-          },
-        ],
+          "Where do we see opportunities to reduce safety incidents further than industry standards?\n\n"+
+          "What new technologies or processes can create safer operations with lower costs?\n\n" +
+          "How can predictive safety analytics open opportunities to avoid disruptions and build trust?\n\n"
       },
       {
-        name: "Environment",
-        info: "Questions about the external context and constraints.",
-        children: [
-          {
-            name: "Regulation",
-            info:
-              "What compliance and legal constraints apply? What reviews are needed and when?",
-          },
-          {
-            name: "Market Trends",
-            info:
-              "What customer, competitor, and macro trends could impact the opportunity?",
-          },
-          {
-            name: "Technology",
-            info:
-              "Which technologies enable or constrain us? Build vs buy? Interop and data needs?",
-          },
-          {
-            name: "Stakeholders",
-            info:
-              "Who is affected (internal/external)? What are their goals and concerns?",
-          },
-          {
-            name: "Risks",
-            info:
-              "What are the top uncertainties? What signals would change our plan?",
-          },
-        ],
+        name: "Academic & Research Partnerships",
+        info:
+          "Which universities or research centers could provide opportunities for breakthrough innovations?\n\n" +
+          "How can joint projects with academia open opportunities for cost-sharing and risk reduction in R&D?\n\n" +
+          "What opportunities exist to absorb young talents that bring fresh skills into our workforce?\n\n"
       },
-    ],
+      {
+        name: "New Market Segments",
+        info:
+          "What market segments offer the highest opportunity for RASK/cargo yield improvement? (Revenue per Available Seat Kilometer)\n\n" +
+          "Where are the opportunities to reduce CASK (e.g., through fuel efficiency, lean operations, automation)? (Cost per Available Seat Kilometer)\n\n" +
+          "Which underserved regions or customer groups offer opportunities for profitable expansion?\n\n" +
+          "How can innovative aircraft/IT/marketing investments create new revenue opportunities?\n\n" +
+          "What opportunities exist to reach break-even faster with strategic partnerships or alliances?\n\n"
+      },
+      {
+        name: "Innovation Culture Development (Incubation)",
+        info:
+          "What internal ideas or employee-driven projects could lead to breakthrough opportunities?\n\n" +
+          "How can adopting emerging technologies (AI, green aviation, digital twins) open competitive opportunities?\n\n" +
+          "Where are the opportunities to incubate startups or spin-offs that support our ecosystem?\n\n" +
+          "What cultural changes would create opportunities for faster innovation adoption across the company?\n\n"
+      }
+    ]
+  },
+  {
+    name: "Environment",
+    info: "Questions about the external context and constraints.",
+    children: [
+      {
+        name: "Sustainability",
+        info:
+          "How can CO₂ emissions per route be managed to ensure compliance with carbon offset programs?\n\n" +
+          "What impact does the route have on local communities in terms of noise and job creation?\n\n" +
+          "How well does the route align with Sustainable Aviation Fuel (SAF) goals?\n\n" +
+          "What role can hydrogen power (H₂) play in reducing environmental impact on this route?\n\n" +
+          "How can renewable sources of energy be used to support operations along this route?\n\n"
+      },
+      {
+        name: "Market Attractiveness",
+        info:
+          "What is the target market size in terms of passenger or cargo demand forecasts for the route/market?\n\n" +
+          "What is the expected growth rate of the market, considering CAGR, tourism, and business travel trends?\n\n" +
+          "Who are the main competitors operating in this market, and what is their market share?\n\n" +
+          "How much pricing power exists in this market for different business models?\n\n"
+      },
+      {
+        name: "Product",
+        info:
+          "How can the product be designed to reduce CO₂ emissions and align with future sustainability goals (SAF, hydrogen, renewables)?\n\n" +
+          "What opportunities exist for the product to tap into high-growth passenger and cargo markets?\n\n" +
+          "How can the product differentiate itself from competitors through unique features, technology, or service quality?\n\n" +
+          "What opportunities exist to optimize the product’s cost structure (production, operation, and lifecycle efficiency)?\n\n" +
+          "How adaptable is the product to evolving regulations, regional demands, and future market trends?\n\n" +
+          "How can innovation partnerships (universities, R&D, tech firms) create long-term opportunities for product improvement?\n\n"
+      },
+      {
+        name: "Industry attractiveness",
+        info:
+          "Differentiation Factors: Can you offer unique features (better service, lower price, superior network)?\n\n" +
+          "Barrier to Entry: High for competitors or easily replicable?\n\n" +
+          "Time-to-Market: How quickly can you launch?\n\n"
+      },
+      {
+        name: "Regional/Geographical",
+        info:
+          "What opportunities exist to set up manufacturing or operational bases in low-investment or cost-advantage regions?\n\n" +
+          "How can regional demand patterns (tourism hubs, cargo corridors, business travel routes) create opportunities for growth?\n\n" +
+          "Which geographic areas provide opportunities to access untapped passenger or cargo markets?\n\n" +
+          "What opportunities arise from leveraging regional trade agreements, government incentives, or subsidies?\n\n" +
+          "How can geographic positioning be used to strengthen connectivity and improve network efficiency?\n\n" +
+          "What opportunities exist to adapt the product or service to regional cultural, economic, or infrastructure needs?\n\n"
+      }
+    ]
+  }
+]
+
+
   };
+  
   // Convert an SVG point to viewport (screen) coordinates
 function svgToViewport(svg, x, y) {
   const pt = svg.createSVGPoint();
@@ -299,8 +329,10 @@ function showPopup(d, anchor, svgEl) {
   // set content
   const path = d.ancestors().map((a) => a.data.name).reverse().slice(1);
   titleEl.textContent = path.join(" → ");
-  bodyEl.textContent = d.data.info || (d.parent && d.parent.data && d.parent.data.info) || "";
-
+  bodyEl.innerHTML = (d.data.info || (d.parent && d.parent.data && d.parent.data.info) || "")
+    .replace(/\n\n/g, "<br><br>")
+    .replace(/\n/g, "<br>");
+  
   // show first so we can measure it
   popup.classList.remove("hidden");
   popup.setAttribute("aria-hidden", "false");

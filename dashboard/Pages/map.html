@@ -212,7 +212,10 @@
        overflow: visible;
        min-width: 240px;
        height: fit-content;
-       flex-shrink: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 55px;
      }
      
      .axis-controls::before {
@@ -237,7 +240,7 @@
      .control-section {
        position: relative;
        z-index: 1;
-       margin-bottom: 35px;
+       margin-bottom: 0;
      }
      
      .control-section:last-child {
@@ -264,25 +267,25 @@
          .axis-dropdown-content {
        position: absolute;
        background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-       min-width: 180px;
-       box-shadow: 
-         0 10px 25px rgba(0, 0, 0, 0.4),
-         0 0 0 1px rgba(255, 255, 255, 0.1);
-       backdrop-filter: blur(10px);
-       border: 1px solid rgba(255, 255, 255, 0.1);
-       border-radius: 12px;
-       z-index: 1001;
-       opacity: 0;
-       visibility: hidden;
-       transform: translateY(-10px) scale(0.95);
-       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-       top: 100%;
-       left: 0;
-       margin-top: 12px;
-       width: 100%;
-       pointer-events: none;
-       isolation: isolate;
-       will-change: transform, opacity;
+  min-width: 180px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 100%;
+  left: 0;
+  margin-top: 12px;
+  width: 100%;
+  pointer-events: none;
+  isolation: isolate;
+  will-change: transform, opacity;
+  max-height: 260px;
+  overflow-y: auto;
      }
     
          .axis-dropdown-content.show {
@@ -412,7 +415,12 @@
 
 </head>
 <body>
-  <div class="header" style="margin-bottom: 0;">Evaluation of Opportunities</div>
+  <div class="header" style="margin-bottom: 0; position: relative;">
+    Evaluation of Opportunities
+    <a href="settings.html" style="position: absolute; right: 32px; top: 50%; transform: translateY(-50%); display: flex; align-items: center;">
+      <img src="gear.svg" alt="Settings" style="width:32px;height:32px;filter:drop-shadow(0 2px 8px rgba(10,108,255,0.18));cursor:pointer;" />
+    </a>
+  </div>
 
 
   <!-- Chart container with controls on the left -->
@@ -422,25 +430,24 @@
       <div class="axis-controls">
         <div class="control-section">
           <h3>X-Axis</h3>
-          <div class="axis-dropdown" id="x-axis-dropdown">
-            <div class="axis-title" id="x-axis-title">Impact</div>
-            <div class="axis-dropdown-content" id="x-axis-content">
-              <a href="#" data-axis="Potential">Potential</a>
-              <a href="#" data-axis="Impact">Impact</a>
-              <a href="#" data-axis="Fit">Fit</a>
-            </div>
+        </div>
+        <div class="axis-dropdown" id="x-axis-dropdown">
+          <div class="axis-title" id="x-axis-title">Impact</div>
+          <div class="axis-dropdown-content" id="x-axis-content">
+            <a href="#" data-axis="Potential">Potential</a>
+            <a href="#" data-axis="Impact">Impact</a>
+            <a href="#" data-axis="Fit">Fit</a>
           </div>
         </div>
-        
         <div class="control-section">
           <h3>Y-Axis</h3>
-          <div class="axis-dropdown" id="y-axis-dropdown">
-            <div class="axis-title" id="y-axis-title">Potential</div>
-            <div class="axis-dropdown-content" id="y-axis-content">
-              <a href="#" data-axis="Potential">Potential</a>
-              <a href="#" data-axis="Impact">Impact</a>
-              <a href="#" data-axis="Fit">Fit</a>
-            </div>
+        </div>
+        <div class="axis-dropdown" id="y-axis-dropdown">
+          <div class="axis-title" id="y-axis-title">Potential</div>
+          <div class="axis-dropdown-content" id="y-axis-content">
+            <a href="#" data-axis="Potential">Potential</a>
+            <a href="#" data-axis="Impact">Impact</a>
+            <a href="#" data-axis="Fit">Fit</a>
           </div>
         </div>
       </div>
@@ -458,6 +465,8 @@
     <!-- Reference your map.js file (at the end of <body>) -->
     <script src="map.js"></script>
 
-  <button class="back-btn">Back to Home</button>
+  <div style="width:100%;display:flex;justify-content:center;margin:32px 0 24px 0;">
+    <button class="back-btn">Back to Home</button>
+  </div>
 </body>
 </html>

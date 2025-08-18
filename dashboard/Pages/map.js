@@ -2,21 +2,36 @@
 // Uses localStorage data from card.js
 
 // Available scaling options from opportunity cards
-const scalingOptions = ['Potential', 'Impact', 'Fit'];
+// Dynamically get scaling options from localStorage
+function getScalingOptions() {
+  const saved = localStorage.getItem('scalingOptions');
+  if (!saved) return [
+    { label: 'Potential', key: 'potential' },
+    { label: 'Impact', key: 'impact' },
+    { label: 'Fit', key: 'fit' }
+  ];
+  return JSON.parse(saved);
+}
 
 // Current axis configuration
-let currentXAxis = 'Impact';
-let currentYAxis = 'Potential';
+// Use keys for axis config
+let scalingOptionsArr = getScalingOptions();
+let currentXAxis = scalingOptionsArr[1]?.key || 'impact';
+let currentYAxis = scalingOptionsArr[0]?.key || 'potential';
+
+function getMaxNum() {
+  return parseInt(localStorage.getItem('maxnum')) || 10;
+}
+let maxnum = getMaxNum();
 
 // Dynamic labels based on selected axes
 function getXLabels(axis) {
-  const labels = ['Very Low', 'Low', 'Medium', 'High', 'Very High'];
-  return labels;
+  // Optionally, customize labels per axis
+  return ['Very Low', 'Low', 'Medium', 'High', 'Very High', '6', '7', '8', '9', '10'];
 }
 
 function getYLabels(axis) {
-  const labels = ['Very Low', 'Low', 'Medium', 'High', 'Very High'];
-  return labels;
+  return ['Very Low', 'Low', 'Medium', 'High', 'Very High', '6', '7', '8', '9', '10'];
 }
 
 const colorMap = {
@@ -50,32 +65,24 @@ function getHeatmapData() {
   const saved = localStorage.getItem('opportunityCards');
   if (!saved) return [];
   const opps = JSON.parse(saved);
-  
   return opps.map(opp => {
-    // Get values for current axes (convert to lowercase for property access)
-    const xValue = opp[currentXAxis.toLowerCase()] || 5;
-    const yValue = opp[currentYAxis.toLowerCase()] || 5;
-    
-    // Map 1-10 values to 0-4 grid indices
-    // const x = Math.min(4, Math.max(0, Math.floor((xValue-1)/2)));
-    // const y = 4 - Math.min(4, Math.max(0, Math.floor((yValue-1)/2)));
-    const x= xValue - 1; // 0-9 for 1-10 scale
-    const y= maxnum-yValue; // 0-9 for 1-10 scale
-    // Calculate score based on the two selected axes
+    // Use selected axis keys for values
+    const xValue = opp[currentXAxis] || 5;
+    const yValue = opp[currentYAxis] || 5;
+    const x = xValue - 1;
+    const y = maxnum - yValue;
     const score = xValue * yValue;
-    
-    return { 
-      x, 
-      y, 
-      name: opp.name, 
+    return {
+      x,
+      y,
+      name: opp.name,
       score: score,
       xValue: xValue,
       yValue: yValue,
-      opp 
+      opp
     };
   });
 }
-const maxnum = 10;
 
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
@@ -420,27 +427,45 @@ function addAxisDropdownFunctionality() {
   const xAxisTitle = document.getElementById('x-axis-title');
   const yAxisTitle = document.getElementById('y-axis-title');
   
+  // Dynamically populate dropdowns from scalingOptions
+  function populateDropdowns() {
+    const scalingOptionsArr = getScalingOptions();
+    xAxisContent.innerHTML = '';
+    yAxisContent.innerHTML = '';
+    scalingOptionsArr.forEach(opt => {
+      const xLink = document.createElement('a');
+      xLink.href = '#';
+      xLink.setAttribute('data-axis', opt.key);
+      xLink.textContent = opt.label;
+      xAxisContent.appendChild(xLink);
+      const yLink = document.createElement('a');
+      yLink.href = '#';
+      yLink.setAttribute('data-axis', opt.key);
+      yLink.textContent = opt.label;
+      yAxisContent.appendChild(yLink);
+    });
+  }
+
   // Update active states
   function updateActiveStates() {
-    // Update X axis active state
     xAxisContent.querySelectorAll('a').forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('data-axis') === currentXAxis) {
         link.classList.add('active');
       }
     });
-    
-    // Update Y axis active state
     yAxisContent.querySelectorAll('a').forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('data-axis') === currentYAxis) {
         link.classList.add('active');
       }
     });
-    
-    // Update titles
-    xAxisTitle.textContent = currentXAxis;
-    yAxisTitle.textContent = currentYAxis;
+    // Show label for selected axis
+    const scalingOptionsArr = getScalingOptions();
+    const xLabel = scalingOptionsArr.find(opt => opt.key === currentXAxis)?.label || currentXAxis;
+    const yLabel = scalingOptionsArr.find(opt => opt.key === currentYAxis)?.label || currentYAxis;
+    xAxisTitle.textContent = xLabel;
+    yAxisTitle.textContent = yLabel;
   }
   
   // Toggle dropdowns with improved event handling
@@ -510,6 +535,8 @@ function addAxisDropdownFunctionality() {
     }, 50);
   }
   
+  // Populate dropdowns and add event listeners
+  populateDropdowns();
   xAxisContent.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -518,7 +545,6 @@ function addAxisDropdownFunctionality() {
       handleAxisSelection(selectedAxis, true);
     });
   });
-  
   yAxisContent.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -553,4 +579,8 @@ function addAxisDropdownFunctionality() {
 }
 
 window.addEventListener('DOMContentLoaded', renderHeatmap);
-window.addEventListener('storage', renderHeatmap);
+window.addEventListener('storage', () => {
+  scalingOptionsArr = getScalingOptions();
+  maxnum = getMaxNum();
+  renderHeatmap();
+});
