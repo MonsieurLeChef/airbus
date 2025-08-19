@@ -4,18 +4,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const saved = localStorage.getItem('attributesOptions');
         if (!saved) return [
             { label: 'Category', key: 'category' },
-            { label: 'Type', key: 'type' },
-            { label: 'Risk', key: 'risk' },
-            { label: 'Scalability', key: 'scalability' }
+            { label: 'Date', key: 'date' },
+            { label: 'Opportunity Source', key: 'opportunitysource' },
+            { label: 'Opportunity Owner', key: 'opportunityowner' },
+            { label: 'Action Plan', key: 'actionplan' },
+            { label: 'Detailed Opportunity Description', key: 'detailedopportunitydescription' }
         ];
         return JSON.parse(saved);
     }
     function getScalers() {
         const saved = localStorage.getItem('scalingOptions');
         if (!saved) return [
-            { label: 'Potential', key: 'potential' },
+            { label: 'Likelihood', key: 'likelihood' },
             { label: 'Impact', key: 'impact' },
-            { label: 'Fit', key: 'fit' }
+            { label: 'Potential Value', key: 'potentialvalue' },
+            { label: 'Feasibility', key: 'feasibility' },
+            { label: 'Strategic Benefit', key: 'strategicbenefit' },
+            { label: 'Fit', key: 'fit' },
+            { label: 'Risk Level', key: 'risklevel' }
         ];
         return JSON.parse(saved);
     }
@@ -85,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const index = parseInt(card.dataset.index, 10);
         const key = target.dataset.key;
 
-        if (target.matches('input[type="text"]')) {
+        if (target.matches('input[type="text"], textarea.description-textarea')) {
             opportunities[index][key] = target.value;
         } else if (target.matches('input[type="range"]')) {
             const value = Number(target.value);
@@ -128,6 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * Generates HTML for a single text attribute field.
      */
     function generateAttributeHTML(attribute, value) {
+        if (attribute.key === 'detailedopportunitydescription') {
+            return `
+                <div class="field-row">
+                    <label>${attribute.label}:</label>
+                    <textarea data-key="${attribute.key}" class="description-textarea">${value || ''}</textarea>
+                </div>`;
+        }
         return `
             <div class="field-row">
                 <label>${attribute.label}:</label>

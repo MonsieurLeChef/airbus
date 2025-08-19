@@ -26,11 +26,12 @@ let maxnum = getMaxNum();
 
 // Dynamic labels based on selected axes
 function getXLabels(axis) {
-  // Optionally, customize labels per axis
+  // RESTORED: Axis labels for clarity
   return ['Maximum', 'Extremely High', 'Very High', 'High', 'Moderately High', 'Medium', 'Moderately Low', 'Low', 'Very Low', 'Extremely Low'];
 }
 
 function getYLabels(axis) {
+  // RESTORED: Axis labels for clarity
   return ['Extremely Low', 'Very Low', 'Low', 'Moderately Low', 'Medium', 'Moderately High', 'High', 'Very High', 'Extremely High', 'Maximum'];
 }
 
@@ -67,8 +68,8 @@ function getHeatmapData() {
   const opps = JSON.parse(saved);
   return opps.map(opp => {
     // Use selected axis keys for values
-    const xValue = opp[currentXAxis] || 5;
-    const yValue = opp[currentYAxis] || 5;
+    const xValue = parseInt(opp[currentXAxis] || 5, 10);
+    const yValue = parseInt(opp[currentYAxis] || 5, 10);
     const x = xValue - 1;
     const y = maxnum - yValue;
     const score = xValue * yValue;
@@ -125,68 +126,37 @@ function renderHeatmap() {
   for (let y = 0; y < maxnum; y++) {
     for (let x = 0; x < maxnum; x++) {
       // Calculate score based on grid position (1-10 scale)
-      const xValue = x +1 //* 2 + 1; // 1, 3, 5, 7, 9
-      const yValue = maxnum-y//) * 2 + 1; // 9, 7, 5, 3, 1
+      const xValue = x + 1;
+      const yValue = maxnum - y;
       const score = xValue * yValue;
       
       const cellX = gridStartX + x*cellW;
       const cellY = 40 + y*cellH;
       
-      // Create enhanced cell gradient with multiple color stops
       const cellGradient = ctx.createLinearGradient(cellX, cellY, cellX + cellW, cellY + cellH);
       const baseColor = getCellColor(score);
       cellGradient.addColorStop(0, baseColor);
-      cellGradient.addColorStop(0.3, adjustBrightness(baseColor, -5));
-      cellGradient.addColorStop(0.7, adjustBrightness(baseColor, -15));
       cellGradient.addColorStop(1, adjustBrightness(baseColor, -25));
       
       ctx.fillStyle = cellGradient;
       ctx.fillRect(cellX, cellY, cellW, cellH);
       
-      // Add enhanced shadow effect
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-      ctx.shadowBlur = 8;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 3;
-      
-      // Draw cell border with enhanced styling
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(cellX + 1, cellY + 1, cellW - 2, cellH - 2);
-      
-      // Add inner highlight
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 1;
-      ctx.strokeRect(cellX + 3, cellY + 3, cellW - 6, cellH - 6);
+      ctx.strokeRect(cellX, cellY, cellW, cellH);
       
-      // Reset shadow
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      
-      // Draw score with enhanced styling
       ctx.fillStyle = '#1f2937';
       ctx.font = 'bold 26px Inter, Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      // Add text shadow for better readability
       ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
       ctx.shadowBlur = 2;
       ctx.shadowOffsetX = 1;
       ctx.shadowOffsetY = 1;
       ctx.fillText(score, cellX + cellW/2, cellY + cellH/2);
-      
-      // Reset shadow
       ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
     }
   }
 
-  // Draw axis labels with enhanced styling
+  // Draw axis labels
   ctx.font = '13px Inter, Arial';
   ctx.fillStyle = '#1f2937';
   
@@ -195,9 +165,10 @@ function renderHeatmap() {
   
   // Y axis labels
   for (let y = 0; y < maxnum; y++) {
+    // MODIFIED: Added save/translate/rotate/restore to draw text vertically
     ctx.save();
     ctx.translate(70, 40 + y*cellH + cellH/2);
-    ctx.rotate(-Math.PI/2);
+    ctx.rotate(-Math.PI / 2);
     ctx.fillText(currentYLabels[y], 0, 0);
     ctx.restore();
   }
@@ -205,31 +176,22 @@ function renderHeatmap() {
   for (let x = 0; x < maxnum; x++) {
     ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + maxnum*cellH + 24);
   }
-  // X axis name with enhanced styling
-  ctx.font = 'bold 24px Inter, Arial';
-  ctx.fillStyle = '#0a6cff';
+    function capitalizeWords(str) {
+      if (!str) return '';
+      return str.replace(/\b\w/g, l => l.toUpperCase());
+    }
+    // X axis name
+    ctx.font = 'bold 24px Inter, Arial';
+    ctx.fillStyle = '#0a6cff';
+    ctx.fillText(capitalizeWords(currentXAxis), (maxnum+2)/2*120, 40 + maxnum*cellH + 80);
   
-  // Add text shadow for axis names
-  ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
-  ctx.shadowBlur = 3;
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 1;
-  ctx.fillText(currentXAxis, (maxnum+2)/2*120, 40 + maxnum*cellH + 80);
-  
-  // Y axis name
-  ctx.save();
-  ctx.translate(30, maxnum/2*100+40);
-  ctx.rotate(-Math.PI/2);
-  ctx.font = 'bold 20px Inter, Arial';
-  ctx.fillStyle = '#0a6cff';
-  ctx.fillText(currentYAxis, 0, 0);
-  ctx.restore();
-  
-  // Reset shadow
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
+    // Y axis name
+    ctx.save();
+    ctx.translate(30, (maxnum/2*100)+40);
+    ctx.rotate(-Math.PI/2);
+    ctx.font = 'bold 20px Inter, Arial';
+    ctx.fillText(capitalizeWords(currentYAxis), 0, 0);
+    ctx.restore();
 
   // Draw opportunity points
   const data = getHeatmapData();
@@ -237,111 +199,40 @@ function renderHeatmap() {
     const cx = gridStartX + pt.x*cellW + cellW/2;
     const cy = 40 + pt.y*cellH + cellH/2;
     
-    // Create enhanced opportunity point with modern gradient
     const pointGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 18);
     pointGradient.addColorStop(0, '#ffffff');
-    pointGradient.addColorStop(0.4, '#f1f5f9');
-    pointGradient.addColorStop(0.7, '#64748b');
     pointGradient.addColorStop(1, '#334155');
     
-    // Add enhanced glow effect
     ctx.shadowColor = '#0a6cff';
     ctx.shadowBlur = 20;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
     
     ctx.beginPath();
     ctx.arc(cx, cy, 16, 0, 2*Math.PI);
     ctx.fillStyle = pointGradient;
     ctx.fill();
     
-    // Reset shadow
     ctx.shadowColor = 'transparent';
-    ctx.shadowBlur = 0;
     
-    // Add outer ring
     ctx.strokeStyle = 'rgba(10, 108, 255, 0.6)';
     ctx.lineWidth = 2;
     ctx.stroke();
     
-    // Add inner highlight with multiple layers
-    ctx.beginPath();
-    ctx.arc(cx - 4, cy - 4, 5, 0, 2*Math.PI);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.fill();
-    
-    ctx.beginPath();
-    ctx.arc(cx - 2, cy - 2, 2, 0, 2*Math.PI);
-    ctx.fillStyle = 'rgba(255, 255, 255, 1)';
-    ctx.fill();
-    
-    // Store opportunity data for hover functionality
     pt.canvasX = cx;
     pt.canvasY = cy;
   });
   
-  // Add hover functionality
   addHoverFunctionality(canvas, data);
-  
-  // Add axis dropdown functionality
-  addAxisDropdownFunctionality();
-}
-
-// Create (or reuse) a tooltip and give it baseline styles
-function ensureTooltip() {
-  let t = document.getElementById('tooltip');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'tooltip';
-    document.body.appendChild(t);
-  }
-  Object.assign(t.style, {
-    position: 'fixed',
-    zIndex: '9999',
-    padding: '8px 10px',
-    background: 'rgba(255,255,255,0.98)',
-    border: '1px solid rgba(0,0,0,0.1)',
-    borderRadius: '10px',
-    boxShadow: '0 8px 22px rgba(0,0,0,0.15)',
-    fontFamily: 'Inter, Arial, sans-serif',
-    fontSize: '12px',
-    color: '#111827',
-    pointerEvents: 'none',   // tooltip won't block clicks
-    display: 'none'          // toggled by JS below
-  });
-  return t;
 }
 
 function addHoverFunctionality(canvas, data) {
   const tooltip = document.getElementById('tooltip');
-  let currentHoveredPoint = null;
-
-  // Keep CSS hover transform; just make origin predictable
-  canvas.style.transformOrigin = 'top left';
+  if (!tooltip) return;
 
   function toCanvasXY(evt) {
     const rect = canvas.getBoundingClientRect();
-    const cs = getComputedStyle(canvas);
-
-    const pl = parseFloat(cs.paddingLeft)   || 0;
-    const pr = parseFloat(cs.paddingRight)  || 0;
-    const pt = parseFloat(cs.paddingTop)    || 0;
-    const pb = parseFloat(cs.paddingBottom) || 0;
-
-    const bl = parseFloat(cs.borderLeftWidth)   || 0;
-    const br = parseFloat(cs.borderRightWidth)  || 0;
-    const bt = parseFloat(cs.borderTopWidth)    || 0;
-    const bb = parseFloat(cs.borderBottomWidth) || 0;
-
-    const contentW = rect.width  - pl - pr - bl - br;
-    const contentH = rect.height - pt - pb - bt - bb;
-
-    const scaleX = canvas.width  / contentW;
-    const scaleY = canvas.height / contentH;
-
     return {
-      x: (evt.clientX - rect.left - pl - bl) * scaleX,
-      y: (evt.clientY - rect.top  - pt - bt) * scaleY
+      x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+      y: (evt.clientY - rect.top) * (canvas.height / rect.height)
     };
   }
 
@@ -349,238 +240,154 @@ function addHoverFunctionality(canvas, data) {
     tooltip.innerHTML = html;
     tooltip.classList.add('show');
 
-    // position in viewport space (since #tooltip is absolute on body)
-    const pad = 12;
-    const tw = tooltip.offsetWidth  || 180;
-    const th = tooltip.offsetHeight || 60;
+    const tw = tooltip.offsetWidth;
     const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
+    
     let left = clientX + 14;
-    let top  = clientY - 24;
-
-    if (left + tw + pad > vw) left = clientX - tw - 14;
-    if (top  + th + pad > vh) top  = vh - th - pad;
-    if (top < pad) top = pad;
+    if (left + tw + 12 > vw) {
+        left = clientX - tw - 14;
+    }
 
     tooltip.style.left = left + 'px';
-    tooltip.style.top  = top  + 'px';
+    tooltip.style.top  = (clientY - 24) + 'px';
   }
 
   function hideTooltip() {
     tooltip.classList.remove('show');
   }
 
-  function handleMove(e) {
+  canvas.addEventListener('pointermove', (e) => {
     const { x, y } = toCanvasXY(e);
-
-    // hit-test: collect all points in the same cell (radius ~26)
     const R2 = 26 * 26;
-    let hoveredPoints = [];
-    for (let i = 0; i < data.length; i++) {
-      const dx = x - data[i].canvasX;
-      const dy = y - data[i].canvasY;
-      if (dx*dx + dy*dy <= R2) hoveredPoints.push(data[i]);
-    }
+    const hoveredPoints = data.filter(pt => {
+        const dx = x - pt.canvasX;
+        const dy = y - pt.canvasY;
+        return (dx*dx + dy*dy) <= R2;
+    });
 
     if (hoveredPoints.length > 0) {
-      // Only update tooltip if the set of hovered points changes
-      const names = hoveredPoints.map(p => p.name).join('|');
-      if (!currentHoveredPoint || currentHoveredPoint.names !== names) {
-        currentHoveredPoint = { names };
-        // Build tooltip for all points
-        let html = hoveredPoints.map(pt => `
-          Score: ${pt.score}<br>
-          <strong>${pt.name || 'Opportunity'}</strong><br>
-
-        `).join('<hr style="margin:6px 0;border:none;border-top:1px solid #e5e7eb;">');
-        showTooltip(html, e.clientX, e.clientY);
-      } else {
-        showTooltip(tooltip.innerHTML, e.clientX, e.clientY);
-      }
+      const score = hoveredPoints[0].score;
+      const namesHtml = hoveredPoints.map(pt => `<strong>${pt.name || 'Unnamed Opportunity'}</strong>`).join('<hr style="margin:6px 0;border:none;border-top:1px solid #e5e7eb;">');
+      const html = `Score: ${score}<hr style="margin:6px 0;border:none;border-top:1px solid #e5e7eb;">${namesHtml}`;
+      
+      showTooltip(html, e.clientX, e.clientY);
       canvas.style.cursor = 'pointer';
-    } else if (currentHoveredPoint) {
-      currentHoveredPoint = null;
+    } else {
       hideTooltip();
       canvas.style.cursor = 'default';
     }
-  }
-
-  canvas.addEventListener('pointermove', handleMove);
-  canvas.addEventListener('pointerleave', () => {
-    currentHoveredPoint = null;
-    hideTooltip();
-    canvas.style.cursor = 'default';
   });
 
-  // don't let tooltip block clicks elsewhere
-  tooltip.addEventListener('click', (e) => e.stopPropagation());
+  canvas.addEventListener('pointerleave', hideTooltip);
 }
 
-
-
 function addAxisDropdownFunctionality() {
-  const xAxisDropdown = document.getElementById('x-axis-dropdown');
-  const yAxisDropdown = document.getElementById('y-axis-dropdown');
   const xAxisContent = document.getElementById('x-axis-content');
   const yAxisContent = document.getElementById('y-axis-content');
   const xAxisTitle = document.getElementById('x-axis-title');
   const yAxisTitle = document.getElementById('y-axis-title');
   
-  // Dynamically populate dropdowns from scalingOptions
   function populateDropdowns() {
-    const scalingOptionsArr = getScalingOptions();
+    const scalingOptions = getScalingOptions();
     xAxisContent.innerHTML = '';
     yAxisContent.innerHTML = '';
-    scalingOptionsArr.forEach(opt => {
-      const xLink = document.createElement('a');
-      xLink.href = '#';
-      xLink.setAttribute('data-axis', opt.key);
-      xLink.textContent = opt.label;
-      xAxisContent.appendChild(xLink);
-      const yLink = document.createElement('a');
-      yLink.href = '#';
-      yLink.setAttribute('data-axis', opt.key);
-      yLink.textContent = opt.label;
-      yAxisContent.appendChild(yLink);
+    scalingOptions.forEach(opt => {
+      const xLink = `<a href="#" data-axis="${opt.key}">${opt.label}</a>`;
+      const yLink = `<a href="#" data-axis="${opt.key}">${opt.label}</a>`;
+      xAxisContent.insertAdjacentHTML('beforeend', xLink);
+      yAxisContent.insertAdjacentHTML('beforeend', yLink);
     });
   }
 
-  // Update active states
   function updateActiveStates() {
-    xAxisContent.querySelectorAll('a').forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('data-axis') === currentXAxis) {
-        link.classList.add('active');
-      }
-    });
-    yAxisContent.querySelectorAll('a').forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('data-axis') === currentYAxis) {
-        link.classList.add('active');
-      }
-    });
-    // Show label for selected axis
-    const scalingOptionsArr = getScalingOptions();
-    const xLabel = scalingOptionsArr.find(opt => opt.key === currentXAxis)?.label || currentXAxis;
-    const yLabel = scalingOptionsArr.find(opt => opt.key === currentYAxis)?.label || currentYAxis;
+    const scalingOptions = getScalingOptions();
+    const xLabel = scalingOptions.find(opt => opt.key === currentXAxis)?.label || currentXAxis;
+    const yLabel = scalingOptions.find(opt => opt.key === currentYAxis)?.label || currentYAxis;
     xAxisTitle.textContent = xLabel;
     yAxisTitle.textContent = yLabel;
+
+    document.querySelectorAll('#x-axis-content a, #y-axis-content a').forEach(link => link.classList.remove('active'));
+    document.querySelector(`#x-axis-content a[data-axis="${currentXAxis}"]`)?.classList.add('active');
+    document.querySelector(`#y-axis-content a[data-axis="${currentYAxis}"]`)?.classList.add('active');
   }
   
-  // Toggle dropdowns with improved event handling
-  function toggleDropdown(dropdownContent, dropdownTitle, otherContent, otherTitle) {
-    const isVisible = dropdownContent.classList.contains('show');
-    
-    // Close all dropdowns first and reset states
-    xAxisContent.classList.remove('show');
-    yAxisContent.classList.remove('show');
-    xAxisTitle.classList.remove('active');
-    yAxisTitle.classList.remove('active');
-    
-    // Force a small delay to ensure proper cleanup
-    setTimeout(() => {
-      // Toggle the clicked dropdown
-      if (!isVisible) {
-        dropdownContent.classList.add('show');
-        dropdownTitle.classList.add('active');
-      }
-      updateActiveStates();
-    }, 10);
+  function toggleDropdown(content, title) {
+    const isVisible = content.classList.contains('show');
+    document.querySelectorAll('.axis-dropdown-content').forEach(c => c.classList.remove('show'));
+    document.querySelectorAll('.axis-title').forEach(t => t.classList.remove('active'));
+    if (!isVisible) {
+      content.classList.add('show');
+      title.classList.add('active');
+    }
   }
   
   xAxisTitle.addEventListener('click', (e) => {
-    e.preventDefault();
     e.stopPropagation();
-    toggleDropdown(xAxisContent, xAxisTitle, yAxisContent, yAxisTitle);
+    toggleDropdown(xAxisContent, xAxisTitle);
   });
   
   yAxisTitle.addEventListener('click', (e) => {
-    e.preventDefault();
     e.stopPropagation();
-    toggleDropdown(yAxisContent, yAxisTitle, xAxisContent, xAxisTitle);
+    toggleDropdown(yAxisContent, yAxisTitle);
   });
   
-  // Handle axis selection with improved event handling
-  function handleAxisSelection(selectedAxis, isXAxis) {
+  function handleAxisSelection(e, isXAxis) {
+    if (e.target.tagName !== 'A') return;
+    e.preventDefault();
+    const selectedAxis = e.target.getAttribute('data-axis');
+    
     if (isXAxis) {
-      if (selectedAxis === currentYAxis) {
-        currentYAxis = currentXAxis;
-        currentXAxis = selectedAxis;
-      } else {
-        currentXAxis = selectedAxis;
-      }
+      if (selectedAxis === currentYAxis) currentYAxis = currentXAxis;
+      currentXAxis = selectedAxis;
     } else {
-      if (selectedAxis === currentXAxis) {
-        currentXAxis = currentYAxis;
-        currentYAxis = selectedAxis;
-      } else {
-        currentYAxis = selectedAxis;
-      }
+      if (selectedAxis === currentXAxis) currentXAxis = currentYAxis;
+      currentYAxis = selectedAxis;
     }
     
-    // Update UI
+    // Just update the UI and re-render. No need to repopulate.
     updateActiveStates();
-    
-    // Close dropdowns with proper cleanup
+    renderHeatmap();
+  }
+  
+  xAxisContent.addEventListener('click', (e) => handleAxisSelection(e, true));
+  yAxisContent.addEventListener('click', (e) => handleAxisSelection(e, false));
+  
+  document.addEventListener('click', () => {
     xAxisContent.classList.remove('show');
     yAxisContent.classList.remove('show');
     xAxisTitle.classList.remove('active');
     yAxisTitle.classList.remove('active');
-    
-    // Force a small delay to ensure proper state cleanup
-    setTimeout(() => {
-      // Re-render heatmap
-      renderHeatmap();
-    }, 50);
-  }
+  });
   
-  // Populate dropdowns and add event listeners
   populateDropdowns();
-  xAxisContent.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const selectedAxis = link.getAttribute('data-axis');
-      handleAxisSelection(selectedAxis, true);
-    });
-  });
-  yAxisContent.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const selectedAxis = link.getAttribute('data-axis');
-      handleAxisSelection(selectedAxis, false);
-    });
-  });
-  
-  // Close dropdowns when clicking outside with improved handling
-  document.addEventListener('click', (e) => {
-    const isClickInsideDropdown = e.target.closest('.axis-dropdown');
-    if (!isClickInsideDropdown) {
-      xAxisContent.classList.remove('show');
-      yAxisContent.classList.remove('show');
-      xAxisTitle.classList.remove('active');
-      yAxisTitle.classList.remove('active');
-    }
-  });
-  
-  // Prevent dropdown from closing when clicking inside it
-  xAxisContent.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-  
-  yAxisContent.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-  
-  // Initialize active states
   updateActiveStates();
 }
 
-window.addEventListener('DOMContentLoaded', renderHeatmap);
+// --- MODIFIED: New initialization flow ---
+function initializeApp() {
+    addAxisDropdownFunctionality(); // Sets up dropdown controls and listeners ONCE.
+    renderHeatmap(); // Renders the initial heatmap.
+}
+
+window.addEventListener('DOMContentLoaded', initializeApp);
+
 window.addEventListener('storage', () => {
+  // When settings are changed on another page...
   scalingOptionsArr = getScalingOptions();
   maxnum = getMaxNum();
-  renderHeatmap();
+  
+  // Repopulate dropdowns in case the options changed
+  const xAxisContent = document.getElementById('x-axis-content');
+  const yAxisContent = document.getElementById('y-axis-content');
+  const scalingOptions = getScalingOptions();
+  xAxisContent.innerHTML = '';
+  yAxisContent.innerHTML = '';
+  scalingOptions.forEach(opt => {
+      const xLink = `<a href="#" data-axis="${opt.key}">${opt.label}</a>`;
+      const yLink = `<a href="#" data-axis="${opt.key}">${opt.label}</a>`;
+      xAxisContent.insertAdjacentHTML('beforeend', xLink);
+      yAxisContent.insertAdjacentHTML('beforeend', yLink);
+  });
+  
+  renderHeatmap(); // Re-render the chart with new data/settings.
 });
