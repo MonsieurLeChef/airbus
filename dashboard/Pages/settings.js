@@ -17,9 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
       { label: 'Detailed Opportunity Description', key: 'detailedopportunitydescription' }
     ];
     const savedScaling = JSON.parse(localStorage.getItem('scalingOptions')) || [
-      { label: 'Likelihood', key: 'likelihood' },
-      { label: 'Impact', key: 'impact' },
-      { label: 'Potential Value', key: 'potentialvalue' }
+            { label: 'Likelihood', key: 'likelihood' },
+            { label: 'Impact', key: 'impact' },
+            { label: 'Potential Value', key: 'potentialvalue' },
+            { label: 'Feasibility', key: 'feasibility' },
+            { label: 'Strategic Benefit', key: 'strategicbenefit' },
+            { label: 'Fit', key: 'fit' },
+            { label: 'Risk Level', key: 'risklevel' }
     ];
     const savedGridNum = parseInt(localStorage.getItem('maxnum')) || 10;
 

@@ -6,9 +6,13 @@
 function getScalingOptions() {
   const saved = localStorage.getItem('scalingOptions');
   if (!saved) return [
-    { label: 'Potential', key: 'potential' },
-    { label: 'Impact', key: 'impact' },
-    { label: 'Fit', key: 'fit' }
+            { label: 'Likelihood', key: 'likelihood' },
+            { label: 'Impact', key: 'impact' },
+            { label: 'Potential Value', key: 'potentialvalue' },
+            { label: 'Feasibility', key: 'feasibility' },
+            { label: 'Strategic Benefit', key: 'strategicbenefit' },
+            { label: 'Fit', key: 'fit' },
+            { label: 'Risk Level', key: 'risklevel' }
   ];
   return JSON.parse(saved);
 }
