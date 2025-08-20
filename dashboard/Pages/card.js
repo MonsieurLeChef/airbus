@@ -165,9 +165,23 @@ document.addEventListener('DOMContentLoaded', () => {
      * Adds a new, empty opportunity card to the list.
      */
     function addOpportunity() {
-        const newOpp = { name: '' };
-        ATTRIBUTES.forEach(attr => newOpp[attr.key] = '');
-        SCALERS.forEach(scaler => newOpp[scaler.key] = 5);
+        let newOpp;
+        if (opportunities.length === 0) {
+            newOpp = {
+                name: 'AI-Powered Predictive Maintenance Platform',
+                category: 'Organisation',
+                date: '22 August 2025',
+                opportunitysource: 'Airline Internal Engineering Insights',
+                opportunityowner: 'Airbus Digital Services Program Manager',
+                actionplan: 'Integrate IoT sensors and digital twin technology',
+                detailedopportunitydescription: `This opportunity focuses on creating an AI-\ndriven predictive maintenance system that\nreduces unplanned downtime, extends\ncomponent life, and lowers maintenance\ncosts for airlines. The system leverages\nAirbus\'s Skywise data platform and digital\ntwin technology, providing real-time\ninsights and automated alerts. This will\nstrengthen Airbus\'s position in the digital\nmarket and enhance customer loyalty.`
+            };
+            SCALERS.forEach(scaler => newOpp[scaler.key] = 5);
+        } else {
+            newOpp = { name: '' };
+            ATTRIBUTES.forEach(attr => newOpp[attr.key] = '');
+            SCALERS.forEach(scaler => newOpp[scaler.key] = 5);
+        }
         opportunities.push(newOpp);
         renderOpportunities();
     }
@@ -184,9 +198,22 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function loadOpportunities() {
         const saved = localStorage.getItem('opportunityCards');
+        let loaded = [];
         if (saved) {
-            opportunities = JSON.parse(saved);
+            loaded = JSON.parse(saved);
         }
+        // Always show the default card as the first card
+        const defaultCard = {
+            name: 'AI-Powered Predictive Maintenance Platform',
+            category: 'Organisation',
+            date: '22 August 2025',
+            opportunitysource: 'Airline Internal Engineering Insights',
+            opportunityowner: 'Airbus Digital Services Program Manager',
+            actionplan: 'Integrate IoT sensors and digital twin technology',
+            detailedopportunitydescription: `This opportunity focuses on creating an AI-\ndriven predictive maintenance system that\nreduces unplanned downtime, extends\ncomponent life, and lowers maintenance\ncosts for airlines. The system leverages\nAirbus\'s Skywise data platform and digital\ntwin technology, providing real-time\ninsights and automated alerts. This will\nstrengthen Airbus\'s position in the digital\nmarket and enhance customer loyalty.`
+        };
+        SCALERS.forEach(scaler => defaultCard[scaler.key] = 5);
+        opportunities = [defaultCard, ...loaded];
         renderOpportunities();
     }
 
