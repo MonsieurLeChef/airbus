@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Event Listeners ---
   saveBtn.addEventListener('click', saveSettings);
 
+    // Update scaling slider range when maxnum changes
+    gridNumInput.addEventListener('input', function() {
+      const maxnum = parseInt(gridNumInput.value) || 10;
+      localStorage.setItem('maxnum', maxnum);
+      window.dispatchEvent(new CustomEvent('maxnumChanged', { detail: { maxnum } }));
+    });
+
   // --- Initial Load ---
   loadSettings();
 });
