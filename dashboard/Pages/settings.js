@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Load existing values ---
     /**
      * Populates the settings form using saved values or defaults.
-     * @returns {void}
      */
     function loadSettings() {
     const savedAttributes = JSON.parse(localStorage.getItem('attributesOptions')) || [
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Save settings ---
     /**
      * Persists the current settings to localStorage and provides feedback.
-     * @returns {void}
      */
     function saveSettings() {
     // MODIFIED: Use the getValues method to get an array directly

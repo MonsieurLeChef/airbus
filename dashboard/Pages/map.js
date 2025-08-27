@@ -123,7 +123,6 @@ function getHeatmapData() {
 
 /**
  * Renders the heatmap using current data and axis selections.
- * @returns {void}
  */
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
@@ -273,7 +272,6 @@ function renderHeatmap() {
  * Adds tooltip interaction for hovering over heatmap points.
  * @param {HTMLCanvasElement} canvas - Canvas element containing the heatmap.
  * @param {Array<object>} data - Data points plotted on the heatmap.
- * @returns {void}
  */
 function addHoverFunctionality(canvas, data) {
   const tooltip = document.getElementById('tooltip');
@@ -297,7 +295,6 @@ function addHoverFunctionality(canvas, data) {
    * @param {string} html - Tooltip inner HTML.
    * @param {number} clientX - Cursor X coordinate.
    * @param {number} clientY - Cursor Y coordinate.
-   * @returns {void}
    */
   function showTooltip(html, clientX, clientY) {
     tooltip.innerHTML = html;
@@ -317,7 +314,6 @@ function addHoverFunctionality(canvas, data) {
 
   /**
    * Hides the tooltip.
-   * @returns {void}
    */
   function hideTooltip() {
     tooltip.classList.remove('show');
@@ -350,7 +346,6 @@ function addHoverFunctionality(canvas, data) {
 
 /**
  * Sets up dropdown controls for selecting axis metrics.
- * @returns {void}
  */
 function addAxisDropdownFunctionality() {
   const xAxisContent = document.getElementById('x-axis-content');
@@ -360,7 +355,6 @@ function addAxisDropdownFunctionality() {
   
     /**
      * Populates dropdown menus with available scaling options.
-     * @returns {void}
      */
     function populateDropdowns() {
     const scalingOptions = getScalingOptions();
@@ -376,7 +370,6 @@ function addAxisDropdownFunctionality() {
 
     /**
      * Updates dropdown labels to reflect current axis selections.
-     * @returns {void}
      */
     function updateActiveStates() {
     const scalingOptions = getScalingOptions();
@@ -394,7 +387,6 @@ function addAxisDropdownFunctionality() {
      * Toggles visibility of a dropdown and marks its title active.
      * @param {HTMLElement} content - Dropdown content element.
      * @param {HTMLElement} title - Title element acting as trigger.
-     * @returns {void}
      */
     function toggleDropdown(content, title) {
     const isVisible = content.classList.contains('show');
@@ -420,7 +412,6 @@ function addAxisDropdownFunctionality() {
      * Handles selection of a new axis metric from a dropdown.
      * @param {MouseEvent} e - Click event from a dropdown link.
      * @param {boolean} isXAxis - True if selecting X axis, false for Y.
-     * @returns {void}
      */
     function handleAxisSelection(e, isXAxis) {
     if (e.target.tagName !== 'A') return;
@@ -457,7 +448,6 @@ function addAxisDropdownFunctionality() {
 // --- MODIFIED: New initialization flow ---
 /**
  * Entry point for the heatmap page; initializes controls and renders the chart.
- * @returns {void}
  */
 function initializeApp() {
     addAxisDropdownFunctionality(); // Sets up dropdown controls and listeners ONCE.

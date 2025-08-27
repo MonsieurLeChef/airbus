@@ -222,7 +222,6 @@
          * Handles slice clicks by highlighting the slice and showing a popup.
          * @param {MouseEvent} event - The click event.
          * @param {d3.HierarchyRectangularNode} d - Data for the clicked slice.
-         * @returns {void}
          */
         function (event, d) {
           // 1) clear previous callout + active state
@@ -267,7 +266,6 @@
         /**
          * Splits long slice names into at most two lines for readability.
          * @param {d3.HierarchyRectangularNode} d - Data for the slice label.
-         * @returns {void}
          */
         function(d) {
           // Limit label to max 12 chars per line, max 2 lines

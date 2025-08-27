@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Renders the entire list of opportunity cards.
-     * @returns {void}
      */
     function renderOpportunities() {
         opportunityList.innerHTML = '';
@@ -93,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handles all input events within the opportunity list for real-time data updates.
      * @param {Event} e - The input or click event.
-     * @returns {void}
      */
     function handleCardInput(e) {
         const target = e.target;
@@ -119,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handles all click events within the opportunity list (e.g., Save, Delete).
      * @param {Event} e - The click event.
-     * @returns {void}
      */
     function handleCardClick(e) {
         const target = e.target;
@@ -182,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Adds a new, empty opportunity card to the list.
-     * @returns {void}
      */
     function addOpportunity() {
         let newOpp;
@@ -208,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Saves the current opportunities array to localStorage.
-     * @returns {void}
      */
     function saveOpportunities() {
         localStorage.setItem('opportunityCards', JSON.stringify(opportunities));
@@ -216,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Loads opportunities from localStorage.
-     * @returns {void}
      */
     function loadOpportunities() {
         const saved = localStorage.getItem('opportunityCards');
