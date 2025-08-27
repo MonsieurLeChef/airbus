@@ -13,6 +13,25 @@
     console.error("Error loading sunburst-data.json:", err);
     }
   });
+
+  // Add once, e.g. at the top of showPopup or after DOMContentLoaded
+if (!document.getElementById("air-bullets-style")) {
+  const style = document.createElement("style");
+  style.id = "air-bullets-style";
+  style.textContent = `
+    .air-bullets { list-style: none; margin: 0; padding: 0; }
+    .air-bullets li { position: relative; padding-left: 1.25rem; margin: 6px 0; }
+    .air-bullets li::before {
+      content: "✈️";
+      position: absolute;
+      left: 0;
+      top: .1rem;
+      font-size: .95rem;
+      line-height: 1;
+    }
+  `;
+  document.head.appendChild(style);
+}
   
   // Convert an SVG point to viewport (screen) coordinates
 function svgToViewport(svg, x, y) {
@@ -242,7 +261,7 @@ function showPopup(d, anchor, svgEl) {
 
   bodyEl.innerHTML = Array.isArray(info)
     // render arrays as a clean bullet list
-    ? `<ul>${info.map(q => `<li>${String(q).trim()}</li>`).join("")}</ul>`
+    ? `<ul class="air-bullets">${info.map(q => `<li>${String(q).trim()}</li>`).join("")}</ul>`
     // keep supporting strings with \n line breaks
     : String(info).replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>");
   
