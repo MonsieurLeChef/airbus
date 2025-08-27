@@ -216,21 +216,29 @@
       .attr("stroke", "#fff")
       .attr("stroke-width", 2)
       .style("cursor", "pointer")
-      .on("click", function (event, d) {
-        // 1) clear previous callout + active state
-        clearCallout();
+      .on(
+        "click",
+        /**
+         * Handles slice clicks by highlighting the slice and showing a popup.
+         * @param {MouseEvent} event - The click event.
+         * @param {d3.HierarchyRectangularNode} d - Data for the clicked slice.
+         * @returns {void}
+         */
+        function (event, d) {
+          // 1) clear previous callout + active state
+          clearCallout();
 
-        // 2) mark this slice
-        activeSlice = d3.select(this).classed("slice-active", true);
+          // 2) mark this slice
+          activeSlice = d3.select(this).classed("slice-active", true);
 
-        // 3) draw connector line
-        if (d.depth === 2) drawCallout(d);
+          // 3) draw connector line
+          if (d.depth === 2) drawCallout(d);
 
-        // 4) open popup
-        const anchor = computeAnchor(d, innerHole, radius);
-        showPopup(d, anchor, svg.node());
-        
-      });
+          // 4) open popup
+          const anchor = computeAnchor(d, innerHole, radius);
+          showPopup(d, anchor, svg.node());
+        }
+      );
 
     g.selectAll(".sunburst-label")
       .data(nodes.filter((d) => d.depth === 1))
@@ -255,36 +263,43 @@
       })
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .each(function(d) {
-        // Limit label to max 12 chars per line, max 2 lines
-        const maxLineLen = 12;
-        const maxLines = 2;
-        const lineHeight = 28; // Fine-tuned line height for better spacing
-        let words = d.data.name.split(' ');
-        let lines = [];
-        let currentLine = '';
-        words.forEach(word => {
-          if ((currentLine + ' ' + word).trim().length <= maxLineLen) {
-            currentLine = (currentLine + ' ' + word).trim();
-          } else {
-            if (currentLine) lines.push(currentLine);
-            currentLine = word;
+      .each(
+        /**
+         * Splits long slice names into at most two lines for readability.
+         * @param {d3.HierarchyRectangularNode} d - Data for the slice label.
+         * @returns {void}
+         */
+        function(d) {
+          // Limit label to max 12 chars per line, max 2 lines
+          const maxLineLen = 12;
+          const maxLines = 2;
+          const lineHeight = 28; // Fine-tuned line height for better spacing
+          let words = d.data.name.split(' ');
+          let lines = [];
+          let currentLine = '';
+          words.forEach(word => {
+            if ((currentLine + ' ' + word).trim().length <= maxLineLen) {
+              currentLine = (currentLine + ' ' + word).trim();
+            } else {
+              if (currentLine) lines.push(currentLine);
+              currentLine = word;
+            }
+          });
+          if (currentLine) lines.push(currentLine);
+          if (lines.length > maxLines) {
+            lines = lines.slice(0, maxLines);
+            lines[maxLines-1] += '…';
           }
-        });
-        if (currentLine) lines.push(currentLine);
-        if (lines.length > maxLines) {
-          lines = lines.slice(0, maxLines);
-          lines[maxLines-1] += '…';
+          // Clear text and add tspans for each line
+          d3.select(this).text(null);
+          lines.forEach((line, i) => {
+            d3.select(this).append('tspan')
+              .attr('x', 0)
+              .attr('y', i * lineHeight - ((lines.length-1)*lineHeight/2)) // improved vertical centering
+              .text(line);
+          });
         }
-        // Clear text and add tspans for each line
-        d3.select(this).text(null);
-        lines.forEach((line, i) => {
-          d3.select(this).append('tspan')
-            .attr('x', 0)
-            .attr('y', i * lineHeight - ((lines.length-1)*lineHeight/2)) // improved vertical centering
-            .text(line);
-        });
-      });
+      );
 
     g.append("circle").attr("r", innerHole - 8).attr("fill", "#fff");
 

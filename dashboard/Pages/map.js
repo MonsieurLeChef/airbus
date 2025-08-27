@@ -123,6 +123,7 @@ function getHeatmapData() {
 
 /**
  * Renders the heatmap using current data and axis selections.
+ * @returns {void}
  */
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
@@ -215,6 +216,11 @@ function renderHeatmap() {
   for (let x = 0; x < maxnum; x++) {
     ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + maxnum*cellH + 24);
   }
+    /**
+     * Converts each word in a string to start with an uppercase letter.
+     * @param {string} str - Text to format.
+     * @returns {string} Capitalized string.
+     */
     function capitalizeWords(str) {
       if (!str) return '';
       return str.replace(/\b\w/g, l => l.toUpperCase());
@@ -263,10 +269,21 @@ function renderHeatmap() {
   addHoverFunctionality(canvas, data);
 }
 
+/**
+ * Adds tooltip interaction for hovering over heatmap points.
+ * @param {HTMLCanvasElement} canvas - Canvas element containing the heatmap.
+ * @param {Array<object>} data - Data points plotted on the heatmap.
+ * @returns {void}
+ */
 function addHoverFunctionality(canvas, data) {
   const tooltip = document.getElementById('tooltip');
   if (!tooltip) return;
 
+  /**
+   * Converts pointer event coordinates to canvas coordinates.
+   * @param {PointerEvent} evt - Pointer event over the canvas.
+   * @returns {{x:number,y:number}} Position within the canvas.
+   */
   function toCanvasXY(evt) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -275,13 +292,20 @@ function addHoverFunctionality(canvas, data) {
     };
   }
 
+  /**
+   * Displays the tooltip near the cursor with provided HTML.
+   * @param {string} html - Tooltip inner HTML.
+   * @param {number} clientX - Cursor X coordinate.
+   * @param {number} clientY - Cursor Y coordinate.
+   * @returns {void}
+   */
   function showTooltip(html, clientX, clientY) {
     tooltip.innerHTML = html;
     tooltip.classList.add('show');
 
     const tw = tooltip.offsetWidth;
     const vw = window.innerWidth;
-    
+
     let left = clientX + 14;
     if (left + tw + 12 > vw) {
         left = clientX - tw - 14;
@@ -291,6 +315,10 @@ function addHoverFunctionality(canvas, data) {
     tooltip.style.top  = (clientY - 24) + 'px';
   }
 
+  /**
+   * Hides the tooltip.
+   * @returns {void}
+   */
   function hideTooltip() {
     tooltip.classList.remove('show');
   }
@@ -322,6 +350,7 @@ function addHoverFunctionality(canvas, data) {
 
 /**
  * Sets up dropdown controls for selecting axis metrics.
+ * @returns {void}
  */
 function addAxisDropdownFunctionality() {
   const xAxisContent = document.getElementById('x-axis-content');
@@ -329,7 +358,11 @@ function addAxisDropdownFunctionality() {
   const xAxisTitle = document.getElementById('x-axis-title');
   const yAxisTitle = document.getElementById('y-axis-title');
   
-  function populateDropdowns() {
+    /**
+     * Populates dropdown menus with available scaling options.
+     * @returns {void}
+     */
+    function populateDropdowns() {
     const scalingOptions = getScalingOptions();
     xAxisContent.innerHTML = '';
     yAxisContent.innerHTML = '';
@@ -341,7 +374,11 @@ function addAxisDropdownFunctionality() {
     });
   }
 
-  function updateActiveStates() {
+    /**
+     * Updates dropdown labels to reflect current axis selections.
+     * @returns {void}
+     */
+    function updateActiveStates() {
     const scalingOptions = getScalingOptions();
     const xLabel = scalingOptions.find(opt => opt.key === currentXAxis)?.label || currentXAxis;
     const yLabel = scalingOptions.find(opt => opt.key === currentYAxis)?.label || currentYAxis;
@@ -353,7 +390,13 @@ function addAxisDropdownFunctionality() {
     document.querySelector(`#y-axis-content a[data-axis="${currentYAxis}"]`)?.classList.add('active');
   }
   
-  function toggleDropdown(content, title) {
+    /**
+     * Toggles visibility of a dropdown and marks its title active.
+     * @param {HTMLElement} content - Dropdown content element.
+     * @param {HTMLElement} title - Title element acting as trigger.
+     * @returns {void}
+     */
+    function toggleDropdown(content, title) {
     const isVisible = content.classList.contains('show');
     document.querySelectorAll('.axis-dropdown-content').forEach(c => c.classList.remove('show'));
     document.querySelectorAll('.axis-title').forEach(t => t.classList.remove('active'));
@@ -373,7 +416,13 @@ function addAxisDropdownFunctionality() {
     toggleDropdown(yAxisContent, yAxisTitle);
   });
   
-  function handleAxisSelection(e, isXAxis) {
+    /**
+     * Handles selection of a new axis metric from a dropdown.
+     * @param {MouseEvent} e - Click event from a dropdown link.
+     * @param {boolean} isXAxis - True if selecting X axis, false for Y.
+     * @returns {void}
+     */
+    function handleAxisSelection(e, isXAxis) {
     if (e.target.tagName !== 'A') return;
     e.preventDefault();
     const selectedAxis = e.target.getAttribute('data-axis');
@@ -408,6 +457,7 @@ function addAxisDropdownFunctionality() {
 // --- MODIFIED: New initialization flow ---
 /**
  * Entry point for the heatmap page; initializes controls and renders the chart.
+ * @returns {void}
  */
 function initializeApp() {
     addAxisDropdownFunctionality(); // Sets up dropdown controls and listeners ONCE.

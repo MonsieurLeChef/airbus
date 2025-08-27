@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Renders the entire list of opportunity cards.
+     * @returns {void}
      */
     function renderOpportunities() {
         opportunityList.innerHTML = '';
@@ -92,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handles all input events within the opportunity list for real-time data updates.
      * @param {Event} e - The input or click event.
+     * @returns {void}
      */
     function handleCardInput(e) {
         const target = e.target;
@@ -117,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handles all click events within the opportunity list (e.g., Save, Delete).
      * @param {Event} e - The click event.
+     * @returns {void}
      */
     function handleCardClick(e) {
         const target = e.target;
@@ -142,6 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Generates HTML for a single text attribute field.
+     * @param {{label:string, key:string}} attribute - Descriptor for the field.
+     * @param {string} value - Existing value to populate.
+     * @returns {string} HTML string for the attribute input.
      */
     function generateAttributeHTML(attribute, value) {
         if (attribute.key === 'detailedopportunitydescription') {
@@ -160,6 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Generates HTML for a single scaling slider.
+     * @param {{label:string, key:string}} scaler - Descriptor for the slider.
+     * @param {number} value - Initial value for the slider.
+     * @returns {string} HTML string for the slider element.
      */
     function generateScalerHTML(scaler, value) {
         const val = value || 5;
@@ -173,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Adds a new, empty opportunity card to the list.
+     * @returns {void}
      */
     function addOpportunity() {
         let newOpp;
@@ -198,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /**
      * Saves the current opportunities array to localStorage.
+     * @returns {void}
      */
     function saveOpportunities() {
         localStorage.setItem('opportunityCards', JSON.stringify(opportunities));
@@ -205,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Loads opportunities from localStorage.
+     * @returns {void}
      */
     function loadOpportunities() {
         const saved = localStorage.getItem('opportunityCards');
