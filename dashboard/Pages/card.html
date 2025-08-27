@@ -150,9 +150,9 @@
 </head>
 <body>
   <div class="header" style="position: relative; display: flex; align-items: center; justify-content: center;">
-    <img src="Airbus_Logo.png" alt="Airbus Logo" style="height:60px; position: absolute; left: 32px; top: 50%; transform: translateY(-50%);filter: brightness(0) invert(1);" />
+  <a href="../../index.html"><img src="Airbus_Logo.png" alt="Airbus Logo" style="height:60px; position: absolute; left: 32px; top: 50%; transform: translateY(-50%);filter: brightness(0) invert(1);" /></a>
     <span style="font-size:2.1rem;font-weight:700;letter-spacing:1px;">Detailing Opportunities</span>
-    <a href="settings.html" style="position: absolute; right: 32px; top: 50%; transform: translateY(-50%); display: flex; align-items: center;">
+  <a href="settings.html?from=card" style="position: absolute; right: 32px; top: 50%; transform: translateY(-50%); display: flex; align-items: center;">
       <img src="gearr.png" alt="Settings" style="width:32px;height:32px;filter:drop-shadow(0 2px 8px rgba(10,108,255,0.18));cursor:pointer;" />
     </a>
   </div>
@@ -164,7 +164,71 @@
         </div>
         <div id="opportunity-list"></div>
     <div class="sticky-back-btn-container">
-      <button class="back-btn">Back to Home</button>
+      <div style="display: flex; justify-content: center; gap: 32px; margin-top: 24px;">
+        <button class="back-btn">Back to Home</button>
+        <button class="back-btn" id="import-btn">Import</button>
+        <input type="file" id="import-file" accept=".csv" style="display:none;" />
+        <button class="back-btn" id="export-btn">Export</button>
+        <a href="map.html" style="text-decoration: none;"><button class="back-btn">Evaluation</button></a>
+      </div>
+      <script>
+        // Export logic
+        document.getElementById('export-btn').onclick = function() {
+          const cards = JSON.parse(localStorage.getItem('opportunityCards') || '[]');
+          if (!cards.length) return alert('No opportunity cards to export!');
+          const keys = Object.keys(cards[0]);
+          const csvRows = [keys.join(',')];
+          for (const card of cards) {
+            csvRows.push(keys.map(k => '"' + String(card[k]).replace(/"/g, '""') + '"').join(','));
+          }
+          const csvContent = csvRows.join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'opportunity_cards.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
+
+        // Import logic
+        document.getElementById('import-btn').onclick = function() {
+          document.getElementById('import-file').click();
+        };
+        document.getElementById('import-file').onchange = function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            const text = evt.target.result;
+            const lines = text.split(/\r?\n/).filter(Boolean);
+            if (!lines.length) return alert('CSV file is empty!');
+            const keys = lines[0].split(',').map(k => k.replace(/"/g, ''));
+            // Get scaler keys from localStorage
+            let scalerKeys = [];
+            try {
+              const scalingOptions = JSON.parse(localStorage.getItem('scalingOptions') || '[]');
+              scalerKeys = scalingOptions.map(opt => opt.key);
+            } catch {}
+            const cards = lines.slice(1).map(line => {
+              const values = line.match(/("[^"]*"|[^,]+)/g).map(v => v.replace(/"/g, ''));
+              const card = {};
+              keys.forEach((k, i) => {
+                if (scalerKeys.includes(k)) {
+                  card[k] = values[i] ? Number(values[i]) : '';
+                } else {
+                  card[k] = values[i] || '';
+                }
+              });
+              return card;
+            });
+            localStorage.setItem('opportunityCards', JSON.stringify(cards));
+            location.reload();
+          };
+          reader.readAsText(file);
+        };
+      </script>
     </div>
     </div>
 

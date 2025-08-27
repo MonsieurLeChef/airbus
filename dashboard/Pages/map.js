@@ -71,9 +71,11 @@ function getHeatmapData() {
   if (!saved) return [];
   const opps = JSON.parse(saved);
   return opps.map(opp => {
-    // Use selected axis keys for values
-    const xValue = parseInt(opp[currentXAxis] || 5, 10);
-    const yValue = parseInt(opp[currentYAxis] || 5, 10);
+    // Convert percent (1-100) to value (1-maxnum)
+    const percentX = parseInt(opp[currentXAxis] || 1, 10);
+    const percentY = parseInt(opp[currentYAxis] || 1, 10);
+    const xValue = Math.round((percentX / 100) * (maxnum - 1) + 1);
+    const yValue = Math.round((percentY / 100) * (maxnum - 1) + 1);
     const x = xValue - 1;
     const y = maxnum - yValue;
     const score = xValue * yValue;
