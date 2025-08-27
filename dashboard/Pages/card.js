@@ -96,10 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (target.matches('input[type="range"]')) {
             const value = Number(target.value);
             opportunities[index][key] = value;
-            // Update the slider's numeric display
+            // Update the slider's numeric display with percent symbol
             const sliderValueSpan = target.nextElementSibling;
             if (sliderValueSpan && sliderValueSpan.classList.contains('slider-value')) {
-                sliderValueSpan.textContent = value;
+                sliderValueSpan.textContent = value + '%';
             }
         }
     }
@@ -152,12 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
      * Generates HTML for a single scaling slider.
      */
     function generateScalerHTML(scaler, value) {
-        const val = value || 5;
+        const percent = value || 1;
         return `
             <div class="slider-row">
                 <label>${scaler.label}</label>
-                <input type="range" min="1" max="10" value="${val}" step="1" data-key="${scaler.key}" />
-                <span class="slider-value">${val}</span>
+                <input type="range" min="1" max="100" value="${percent}" step="1" data-key="${scaler.key}" />
+                <span class="slider-value">${percent}%</span>
             </div>`;
     }
 
@@ -165,25 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * Adds a new, empty opportunity card to the list.
      */
     function addOpportunity() {
-        let newOpp;
-        if (opportunities.length === 0) {
-            newOpp = {
-                name: 'AI-Powered Predictive Maintenance Platform',
-                category: 'Organisation',
-                date: '22 August 2025',
-                opportunitysource: 'Airline Internal Engineering Insights',
-                opportunityowner: 'Airbus Digital Services Program Manager',
-                actionplan: 'Integrate IoT sensors and digital twin technology',
-                detailedopportunitydescription: `This opportunity focuses on creating an AI-\ndriven predictive maintenance system that\nreduces unplanned downtime, extends\ncomponent life, and lowers maintenance\ncosts for airlines. The system leverages\nAirbus\'s Skywise data platform and digital\ntwin technology, providing real-time\ninsights and automated alerts. This will\nstrengthen Airbus\'s position in the digital\nmarket and enhance customer loyalty.`
-            };
-            SCALERS.forEach(scaler => newOpp[scaler.key] = 5);
-        } else {
-            newOpp = { name: '' };
-            ATTRIBUTES.forEach(attr => newOpp[attr.key] = '');
-            SCALERS.forEach(scaler => newOpp[scaler.key] = 5);
-        }
-        opportunities.push(newOpp);
-        renderOpportunities();
+    let newOpp = { name: '' };
+    ATTRIBUTES.forEach(attr => newOpp[attr.key] = '');
+    SCALERS.forEach(scaler => newOpp[scaler.key] = '');
+    opportunities.push(newOpp);
+    renderOpportunities();
     }
     
     /**
@@ -202,19 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saved) {
             loaded = JSON.parse(saved);
         }
-        // Always show the default card as the first card
-        const defaultCard = {
-            name: 'AI-Powered Predictive Maintenance Platform',
-            category: 'Organisation',
-            date: '22 August 2025',
-            opportunitysource: 'Airline Internal Engineering Insights',
-            opportunityowner: 'Airbus Digital Services Program Manager',
-            actionplan: 'Integrate IoT sensors and digital twin technology',
-            detailedopportunitydescription: `This opportunity focuses on creating an AI-\ndriven predictive maintenance system that\nreduces unplanned downtime, extends\ncomponent life, and lowers maintenance\ncosts for airlines. The system leverages\nAirbus\'s Skywise data platform and digital\ntwin technology, providing real-time\ninsights and automated alerts. This will\nstrengthen Airbus\'s position in the digital\nmarket and enhance customer loyalty.`
-        };
-        SCALERS.forEach(scaler => defaultCard[scaler.key] = 5);
-        opportunities = [defaultCard, ...loaded];
-        renderOpportunities();
+    opportunities = loaded;
+    renderOpportunities();
     }
 
     // --- Initial Setup ---
