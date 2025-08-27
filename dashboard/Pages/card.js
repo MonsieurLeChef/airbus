@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Load attributes and scalers from localStorage
+    /**
+     * Retrieves attribute options from localStorage or returns defaults.
+     * @returns {Array<object>} Attribute descriptors for the card form.
+     */
     function getAttributes() {
         const saved = localStorage.getItem('attributesOptions');
         if (!saved) return [
@@ -12,6 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         return JSON.parse(saved);
     }
+
+    /**
+     * Retrieves scaling options from localStorage or returns defaults.
+     * @returns {Array<object>} Scaling descriptors for sliders.
+     */
     function getScalers() {
         const saved = localStorage.getItem('scalingOptions');
         if (!saved) return [
@@ -29,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let ATTRIBUTES = getAttributes();
     let SCALERS = getScalers();
 
+    // Re-render cards if settings change in another tab
     window.addEventListener('storage', () => {
         ATTRIBUTES = getAttributes();
         SCALERS = getScalers();
@@ -132,6 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Generates HTML for a single text attribute field.
+     * @param {{label:string, key:string}} attribute - Descriptor for the field.
+     * @param {string} value - Existing value to populate.
+     * @returns {string} HTML string for the attribute input.
      */
     function generateAttributeHTML(attribute, value) {
         if (attribute.key === 'detailedopportunitydescription') {
@@ -150,6 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Generates HTML for a single scaling slider.
+     * @param {{label:string, key:string}} scaler - Descriptor for the slider.
+     * @param {number} value - Initial value for the slider.
+     * @returns {string} HTML string for the slider element.
      */
     function generateScalerHTML(scaler, value) {
         const val = value || 5;

@@ -1,3 +1,4 @@
+// Provides basic navigation for the dashboard and subpages
 document.addEventListener('DOMContentLoaded', () => {
     // Home page navigation
     document.querySelectorAll('.dashboard-btn').forEach(btn => {

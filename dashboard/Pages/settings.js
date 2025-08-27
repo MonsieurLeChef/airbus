@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.querySelector('.save-btn');
 
   // --- Load existing values ---
-  function loadSettings() {
+    /**
+     * Populates the settings form using saved values or defaults.
+     */
+    function loadSettings() {
     const savedAttributes = JSON.parse(localStorage.getItem('attributesOptions')) || [
       { label: 'Category', key: 'category' },
       { label: 'Date', key: 'date' },
@@ -34,7 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Save settings ---
-  function saveSettings() {
+    /**
+     * Persists the current settings to localStorage and provides feedback.
+     */
+    function saveSettings() {
     // MODIFIED: Use the getValues method to get an array directly
     const attrLabels = attributesInput.getValues();
     const scalingLabels = scalingInput.getValues();

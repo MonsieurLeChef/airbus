@@ -81,6 +81,10 @@ class MultiInput extends HTMLElement {
     this.input = this.shadowRoot.querySelector('input');
   }
 
+  /**
+   * Lifecycle hook called when the element is added to the DOM.
+   * Sets up event listeners for interaction.
+   */
   connectedCallback() {
     // --- Add event listeners ---
     this.container.addEventListener('click', () => this.input.focus());
@@ -108,6 +112,10 @@ class MultiInput extends HTMLElement {
 
   // --- Private Methods ---
 
+  /**
+   * Handles typing within the inner input to add or remove values.
+   * @param {KeyboardEvent} event - Key event from the input field.
+   */
   _handleKeyDown(event) {
     if (event.key === 'Enter' || event.key === ',') {
       event.preventDefault();
@@ -122,7 +130,11 @@ class MultiInput extends HTMLElement {
       }
     }
   }
-  
+
+  /**
+   * Handles click events to remove a selected value.
+   * @param {MouseEvent} event - Click event from within the component.
+   */
   _handleDelete(event) {
     if (event.target.classList.contains('delete-btn')) {
       const index = parseInt(event.target.dataset.index, 10);
@@ -130,6 +142,10 @@ class MultiInput extends HTMLElement {
     }
   }
 
+  /**
+   * Adds a new value if it does not already exist.
+   * @param {string} value - The value to add as a pill.
+   */
   _addValue(value) {
     if (!this._values.includes(value)) {
       this._values.push(value);
@@ -137,11 +153,18 @@ class MultiInput extends HTMLElement {
     }
   }
 
+  /**
+   * Removes a value at the given index.
+   * @param {number} index - Index of the value to remove.
+   */
   _removeValue(index) {
     this._values.splice(index, 1);
     this._render();
   }
 
+  /**
+   * Renders the current list of values as pills inside the container.
+   */
   _render() {
     // Clear existing pills
     this.container.querySelectorAll('.pill').forEach(pill => pill.remove());
@@ -151,12 +174,12 @@ class MultiInput extends HTMLElement {
       const pill = document.createElement('div');
       pill.className = 'pill';
       pill.textContent = value;
-      
+
       const deleteBtn = document.createElement('span');
       deleteBtn.className = 'delete-btn';
       deleteBtn.textContent = 'x';
       deleteBtn.dataset.index = index;
-      
+
       pill.appendChild(deleteBtn);
       this.container.insertBefore(pill, this.input);
     });
