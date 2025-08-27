@@ -1,8 +1,13 @@
 // Interactive Heat Map for Opportunities
+// Interactive heat map for evaluating opportunities
 // Uses localStorage data from card.js
 
 // Available scaling options from opportunity cards
 // Dynamically get scaling options from localStorage
+/**
+ * Reads scaling options from localStorage.
+ * @returns {Array<object>} Array of scaling option descriptors.
+ */
 function getScalingOptions() {
   const saved = localStorage.getItem('scalingOptions');
   if (!saved) return [
@@ -23,17 +28,31 @@ let scalingOptionsArr = getScalingOptions();
 let currentXAxis = scalingOptionsArr[1]?.key || 'impact';
 let currentYAxis = scalingOptionsArr[0]?.key || 'potential';
 
+/**
+ * Retrieves the maximum value for the axes from settings.
+ * @returns {number} Maximum scaling number.
+ */
 function getMaxNum() {
   return parseInt(localStorage.getItem('maxnum')) || 10;
 }
 let maxnum = getMaxNum();
 
 // Dynamic labels based on selected axes
+/**
+ * Provides human-readable labels for the X axis.
+ * @param {string} axis - Axis key (reserved for future use).
+ * @returns {string[]} Labels from high to low.
+ */
 function getXLabels(axis) {
   // RESTORED: Axis labels for clarity
   return ['Maximum', 'Extremely High', 'Very High', 'High', 'Moderately High', 'Medium', 'Moderately Low', 'Low', 'Very Low', 'Extremely Low'];
 }
 
+/**
+ * Provides human-readable labels for the Y axis.
+ * @param {string} axis - Axis key (reserved for future use).
+ * @returns {string[]} Labels from low to high.
+ */
 function getYLabels(axis) {
   // RESTORED: Axis labels for clarity
   return ['Extremely Low', 'Very Low', 'Low', 'Moderately Low', 'Medium', 'Moderately High', 'High', 'Very High', 'Extremely High', 'Maximum'];
@@ -45,8 +64,11 @@ const colorMap = {
   red: '#ef4444' // Critical Risk / Important Opportunity - Modern red
 };
 
-
-
+/**
+ * Determines the fill color for a cell based on score.
+ * @param {number} score - Product of x and y values.
+ * @returns {string} Hex color representing risk level.
+ */
 function getCellColor(score) {
   // Dynamic color based on score (max score is 100 for 10x10)
   if (score > (maxnum**2)*50/100) return colorMap.green;
@@ -54,6 +76,12 @@ function getCellColor(score) {
   return colorMap.red;
 }
 
+/**
+ * Lightens or darkens a hex color.
+ * @param {string} hex - Base color code.
+ * @param {number} percent - Adjustment amount (-100 to 100).
+ * @returns {string} Adjusted color in hex.
+ */
 function adjustBrightness(hex, percent) {
   const num = parseInt(hex.replace("#", ""), 16);
   const amt = Math.round(2.55 * percent);
@@ -66,6 +94,10 @@ function adjustBrightness(hex, percent) {
 }
 
 // Map opportunity data to heatmap cells based on current axis selection
+/**
+ * Converts opportunity cards into heatmap cell data.
+ * @returns {Array<object>} Array of cell descriptors with coordinates and scores.
+ */
 function getHeatmapData() {
   const saved = localStorage.getItem('opportunityCards');
   if (!saved) return [];
@@ -91,6 +123,9 @@ function getHeatmapData() {
   });
 }
 
+/**
+ * Renders the heatmap using current data and axis selections.
+ */
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
   container.innerHTML = '';
@@ -207,6 +242,33 @@ function renderHeatmap() {
     if (!str) return '';
     return str.replace(/\b\w/g, l => l.toUpperCase());
   }
+<<<<<<< HEAD
+  // X axis labels
+  for (let x = 0; x < maxnum; x++) {
+    ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + maxnum*cellH + 24);
+  }
+    /**
+     * Converts each word in a string to start with an uppercase letter.
+     * @param {string} str - Text to format.
+     * @returns {string} Capitalized string.
+     */
+    function capitalizeWords(str) {
+      if (!str) return '';
+      return str.replace(/\b\w/g, l => l.toUpperCase());
+    }
+    // X axis name
+    ctx.font = 'bold 24px Inter, Arial';
+    ctx.fillStyle = '#0a6cff';
+    ctx.fillText(capitalizeWords(currentXAxis), (maxnum+2)/2*120, 40 + maxnum*cellH + 80);
+  
+    // Y axis name
+    ctx.save();
+    ctx.translate(30, (maxnum/2*100)+40);
+    ctx.rotate(-Math.PI/2);
+    ctx.font = 'bold 20px Inter, Arial';
+    ctx.fillText(capitalizeWords(currentYAxis), 0, 0);
+    ctx.restore();
+=======
   // Y axis name
   ctx.save();
   ctx.translate(30, (maxnum/2*100)+40);
@@ -222,6 +284,7 @@ function renderHeatmap() {
   ctx.fillStyle = '#222';
   ctx.textAlign = 'center';
   ctx.fillText(capitalizeWords(currentXAxis), gridStartX + (maxnum*cellW)/2, 40 + maxnum*cellH + 80);
+>>>>>>> origin/Advanced-Dashboard
 
   // Draw opportunity points
   const data = getHeatmapData();
@@ -254,10 +317,20 @@ function renderHeatmap() {
   addHoverFunctionality(canvas, data);
 }
 
+/**
+ * Adds tooltip interaction for hovering over heatmap points.
+ * @param {HTMLCanvasElement} canvas - Canvas element containing the heatmap.
+ * @param {Array<object>} data - Data points plotted on the heatmap.
+ */
 function addHoverFunctionality(canvas, data) {
   const tooltip = document.getElementById('tooltip');
   if (!tooltip) return;
 
+  /**
+   * Converts pointer event coordinates to canvas coordinates.
+   * @param {PointerEvent} evt - Pointer event over the canvas.
+   * @returns {{x:number,y:number}} Position within the canvas.
+   */
   function toCanvasXY(evt) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -266,13 +339,19 @@ function addHoverFunctionality(canvas, data) {
     };
   }
 
+  /**
+   * Displays the tooltip near the cursor with provided HTML.
+   * @param {string} html - Tooltip inner HTML.
+   * @param {number} clientX - Cursor X coordinate.
+   * @param {number} clientY - Cursor Y coordinate.
+   */
   function showTooltip(html, clientX, clientY) {
     tooltip.innerHTML = html;
     tooltip.classList.add('show');
 
     const tw = tooltip.offsetWidth;
     const vw = window.innerWidth;
-    
+
     let left = clientX + 14;
     if (left + tw + 12 > vw) {
         left = clientX - tw - 14;
@@ -282,6 +361,9 @@ function addHoverFunctionality(canvas, data) {
     tooltip.style.top  = (clientY - 24) + 'px';
   }
 
+  /**
+   * Hides the tooltip.
+   */
   function hideTooltip() {
     tooltip.classList.remove('show');
   }
@@ -311,13 +393,19 @@ function addHoverFunctionality(canvas, data) {
   canvas.addEventListener('pointerleave', hideTooltip);
 }
 
+/**
+ * Sets up dropdown controls for selecting axis metrics.
+ */
 function addAxisDropdownFunctionality() {
   const xAxisContent = document.getElementById('x-axis-content');
   const yAxisContent = document.getElementById('y-axis-content');
   const xAxisTitle = document.getElementById('x-axis-title');
   const yAxisTitle = document.getElementById('y-axis-title');
   
-  function populateDropdowns() {
+    /**
+     * Populates dropdown menus with available scaling options.
+     */
+    function populateDropdowns() {
     const scalingOptions = getScalingOptions();
     xAxisContent.innerHTML = '';
     yAxisContent.innerHTML = '';
@@ -329,7 +417,10 @@ function addAxisDropdownFunctionality() {
     });
   }
 
-  function updateActiveStates() {
+    /**
+     * Updates dropdown labels to reflect current axis selections.
+     */
+    function updateActiveStates() {
     const scalingOptions = getScalingOptions();
     const xLabel = scalingOptions.find(opt => opt.key === currentXAxis)?.label || currentXAxis;
     const yLabel = scalingOptions.find(opt => opt.key === currentYAxis)?.label || currentYAxis;
@@ -341,7 +432,12 @@ function addAxisDropdownFunctionality() {
     document.querySelector(`#y-axis-content a[data-axis="${currentYAxis}"]`)?.classList.add('active');
   }
   
-  function toggleDropdown(content, title) {
+    /**
+     * Toggles visibility of a dropdown and marks its title active.
+     * @param {HTMLElement} content - Dropdown content element.
+     * @param {HTMLElement} title - Title element acting as trigger.
+     */
+    function toggleDropdown(content, title) {
     const isVisible = content.classList.contains('show');
     document.querySelectorAll('.axis-dropdown-content').forEach(c => c.classList.remove('show'));
     document.querySelectorAll('.axis-title').forEach(t => t.classList.remove('active'));
@@ -361,7 +457,12 @@ function addAxisDropdownFunctionality() {
     toggleDropdown(yAxisContent, yAxisTitle);
   });
   
-  function handleAxisSelection(e, isXAxis) {
+    /**
+     * Handles selection of a new axis metric from a dropdown.
+     * @param {MouseEvent} e - Click event from a dropdown link.
+     * @param {boolean} isXAxis - True if selecting X axis, false for Y.
+     */
+    function handleAxisSelection(e, isXAxis) {
     if (e.target.tagName !== 'A') return;
     e.preventDefault();
     const selectedAxis = e.target.getAttribute('data-axis');
@@ -394,6 +495,9 @@ function addAxisDropdownFunctionality() {
 }
 
 // --- MODIFIED: New initialization flow ---
+/**
+ * Entry point for the heatmap page; initializes controls and renders the chart.
+ */
 function initializeApp() {
     addAxisDropdownFunctionality(); // Sets up dropdown controls and listeners ONCE.
     renderHeatmap(); // Renders the initial heatmap.

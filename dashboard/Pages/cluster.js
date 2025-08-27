@@ -1,3 +1,4 @@
+// Interactive sunburst chart for identifying opportunity areas
 (() => {
   // === Data you can edit freely ===
   const inner_title = "Opportunity Areas"
@@ -112,24 +113,43 @@
   };
   
   // Convert an SVG point to viewport (screen) coordinates
-function svgToViewport(svg, x, y) {
-  const pt = svg.createSVGPoint();
-  pt.x = x; pt.y = y;
-  const spt = pt.matrixTransform(svg.getScreenCTM());
-  return { x: spt.x, y: spt.y };
-}
+  /**
+   * Transforms SVG coordinates to viewport coordinates.
+   * @param {SVGSVGElement} svg - The SVG element hosting the chart.
+   * @param {number} x - X position within the SVG.
+   * @param {number} y - Y position within the SVG.
+   * @returns {{x:number, y:number}} Coordinates relative to the browser viewport.
+   */
+  function svgToViewport(svg, x, y) {
+    const pt = svg.createSVGPoint();
+    pt.x = x; pt.y = y;
+    const spt = pt.matrixTransform(svg.getScreenCTM());
+    return { x: spt.x, y: spt.y };
+  }
 
-// Compute where to put the popover (near the end of the leader line)
-function computeAnchor(d, innerHole, radius) {
-  const midA = (d.x0 + d.x1) / 2;
-  const r1 = innerHole + d.y1;
-  const pJustOutside = d3.pointRadial(midA, r1 + 16);
-  const rightSide = pJustOutside[0] >= 0;
-  const edgeX = rightSide ? radius - 8 : -radius + 8;
-  const pEdge = [edgeX, pJustOutside[1]];
-  return { svgX: pEdge[0], svgY: pEdge[1], side: rightSide ? "right" : "left" };
-}
+  // Compute where to put the popover (near the end of the leader line)
+  /**
+   * Determines where to anchor the callout line and popup for a slice.
+   * @param {object} d - D3 hierarchy node for the slice.
+   * @param {number} innerHole - Radius of the inner hole.
+   * @param {number} radius - Overall radius of the chart.
+   * @returns {{svgX:number, svgY:number, side:string}} Anchor coordinates and side indicator.
+   */
+  function computeAnchor(d, innerHole, radius) {
+    const midA = (d.x0 + d.x1) / 2;
+    const r1 = innerHole + d.y1;
+    const pJustOutside = d3.pointRadial(midA, r1 + 16);
+    const rightSide = pJustOutside[0] >= 0;
+    const edgeX = rightSide ? radius - 8 : -radius + 8;
+    const pEdge = [edgeX, pJustOutside[1]];
+    return { svgX: pEdge[0], svgY: pEdge[1], side: rightSide ? "right" : "left" };
+  }
 
+  /**
+   * Renders the interactive sunburst chart.
+   * @param {string} containerSelector - CSS selector for the container.
+   * @param {object} data - Hierarchical data object.
+   */
   function renderSunburst(containerSelector, data) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
@@ -196,21 +216,28 @@ function computeAnchor(d, innerHole, radius) {
       .attr("stroke", "#fff")
       .attr("stroke-width", 2)
       .style("cursor", "pointer")
-      .on("click", function (event, d) {
-        // 1) clear previous callout + active state
-        clearCallout();
+      .on(
+        "click",
+        /**
+         * Handles slice clicks by highlighting the slice and showing a popup.
+         * @param {MouseEvent} event - The click event.
+         * @param {d3.HierarchyRectangularNode} d - Data for the clicked slice.
+         */
+        function (event, d) {
+          // 1) clear previous callout + active state
+          clearCallout();
 
-        // 2) mark this slice
-        activeSlice = d3.select(this).classed("slice-active", true);
+          // 2) mark this slice
+          activeSlice = d3.select(this).classed("slice-active", true);
 
-        // 3) draw connector line
-        if (d.depth === 2) drawCallout(d);
+          // 3) draw connector line
+          if (d.depth === 2) drawCallout(d);
 
-        // 4) open popup
-        const anchor = computeAnchor(d, innerHole, radius);
-        showPopup(d, anchor, svg.node());
-        
-      });
+          // 4) open popup
+          const anchor = computeAnchor(d, innerHole, radius);
+          showPopup(d, anchor, svg.node());
+        }
+      );
 
     g.selectAll(".sunburst-label")
       .data(nodes.filter((d) => d.depth === 1))
@@ -235,36 +262,42 @@ function computeAnchor(d, innerHole, radius) {
       })
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .each(function(d) {
-        // Limit label to max 12 chars per line, max 2 lines
-        const maxLineLen = 12;
-        const maxLines = 2;
-        const lineHeight = 28; // Fine-tuned line height for better spacing
-        let words = d.data.name.split(' ');
-        let lines = [];
-        let currentLine = '';
-        words.forEach(word => {
-          if ((currentLine + ' ' + word).trim().length <= maxLineLen) {
-            currentLine = (currentLine + ' ' + word).trim();
-          } else {
-            if (currentLine) lines.push(currentLine);
-            currentLine = word;
+      .each(
+        /**
+         * Splits long slice names into at most two lines for readability.
+         * @param {d3.HierarchyRectangularNode} d - Data for the slice label.
+         */
+        function(d) {
+          // Limit label to max 12 chars per line, max 2 lines
+          const maxLineLen = 12;
+          const maxLines = 2;
+          const lineHeight = 28; // Fine-tuned line height for better spacing
+          let words = d.data.name.split(' ');
+          let lines = [];
+          let currentLine = '';
+          words.forEach(word => {
+            if ((currentLine + ' ' + word).trim().length <= maxLineLen) {
+              currentLine = (currentLine + ' ' + word).trim();
+            } else {
+              if (currentLine) lines.push(currentLine);
+              currentLine = word;
+            }
+          });
+          if (currentLine) lines.push(currentLine);
+          if (lines.length > maxLines) {
+            lines = lines.slice(0, maxLines);
+            lines[maxLines-1] += '…';
           }
-        });
-        if (currentLine) lines.push(currentLine);
-        if (lines.length > maxLines) {
-          lines = lines.slice(0, maxLines);
-          lines[maxLines-1] += '…';
+          // Clear text and add tspans for each line
+          d3.select(this).text(null);
+          lines.forEach((line, i) => {
+            d3.select(this).append('tspan')
+              .attr('x', 0)
+              .attr('y', i * lineHeight - ((lines.length-1)*lineHeight/2)) // improved vertical centering
+              .text(line);
+          });
         }
-        // Clear text and add tspans for each line
-        d3.select(this).text(null);
-        lines.forEach((line, i) => {
-          d3.select(this).append('tspan')
-            .attr('x', 0)
-            .attr('y', i * lineHeight - ((lines.length-1)*lineHeight/2)) // improved vertical centering
-            .text(line);
-        });
-      });
+      );
 
     g.append("circle").attr("r", innerHole - 8).attr("fill", "#fff");
 
@@ -277,6 +310,10 @@ function computeAnchor(d, innerHole, radius) {
 
   
     // draw a polyline from the slice to the chart edge
+    /**
+     * Draws a leader line from the slice to the chart edge.
+     * @param {d3.HierarchyRectangularNode} d - Slice node to highlight.
+     */
     function drawCallout(d) {
       const midA = (d.x0 + d.x1) / 2;
       const r0 = innerHole + d.y0;
@@ -308,6 +345,9 @@ function computeAnchor(d, innerHole, radius) {
         .attr("stroke-dashoffset", 0);
     }
 
+    /**
+     * Removes any existing callout line and clears active slice state.
+     */
     function clearCallout() {
       calloutLayer.selectAll("*").remove();
       if (activeSlice) {
@@ -320,6 +360,12 @@ function computeAnchor(d, innerHole, radius) {
     document.addEventListener("popup:closed", clearCallout);
   }
 
+/**
+ * Displays a contextual popup near the selected slice.
+ * @param {d3.HierarchyRectangularNode} d - The slice node being described.
+ * @param {{svgX:number, svgY:number, side:string}} anchor - Positioning information.
+ * @param {SVGSVGElement} svgEl - The parent SVG element.
+ */
 function showPopup(d, anchor, svgEl) {
   const popup = document.getElementById("entry-popup");
   const content = popup.querySelector(".popup-content");
@@ -359,6 +405,9 @@ function showPopup(d, anchor, svgEl) {
   content.style.top = `${top}px`;
 
   // close mechanics
+  /**
+   * Hides the popup and removes associated event listeners.
+   */
   function close() {
     popup.classList.add("hidden");
     popup.setAttribute("aria-hidden", "true");
@@ -369,14 +418,27 @@ function showPopup(d, anchor, svgEl) {
     window.removeEventListener("scroll", reposition, true);
     document.dispatchEvent(new CustomEvent("popup:closed"));
   }
+
+  /**
+   * Closes the popup when clicking outside of it.
+   * @param {MouseEvent} e - Click event.
+   */
   function overlayHandler(e) {
     if (e.target === popup) close();
   }
+
+  /**
+   * Closes the popup when the Escape key is pressed.
+   * @param {KeyboardEvent} e - Key event.
+   */
   function escHandler(e) {
     if (e.key === "Escape") close();
   }
 
   // keep it stuck to the anchor on resize/scroll
+  /**
+   * Repositions the popup to stay aligned with its anchor.
+   */
   function reposition() {
     const rect = content.getBoundingClientRect();
     const vp = svgToViewport(svgEl, anchor.svgX, anchor.svgY);
