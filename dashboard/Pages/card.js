@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Load attributes and scalers from localStorage
+    /**
+     * Retrieves attribute options from localStorage or returns defaults.
+     * @returns {Array<object>} Attribute descriptors for the card form.
+     */
     function getAttributes() {
         const saved = localStorage.getItem('attributesOptions');
         if (!saved) return [
@@ -12,6 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         return JSON.parse(saved);
     }
+
+    /**
+     * Retrieves scaling options from localStorage or returns defaults.
+     * @returns {Array<object>} Scaling descriptors for sliders.
+     */
     function getScalers() {
         const saved = localStorage.getItem('scalingOptions');
         if (!saved) return [
@@ -29,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let ATTRIBUTES = getAttributes();
     let SCALERS = getScalers();
 
+    // Re-render cards if settings change in another tab
     window.addEventListener('storage', () => {
         ATTRIBUTES = getAttributes();
         SCALERS = getScalers();

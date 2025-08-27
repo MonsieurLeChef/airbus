@@ -1,8 +1,13 @@
 // Interactive Heat Map for Opportunities
+// Interactive heat map for evaluating opportunities
 // Uses localStorage data from card.js
 
 // Available scaling options from opportunity cards
 // Dynamically get scaling options from localStorage
+/**
+ * Reads scaling options from localStorage.
+ * @returns {Array<object>} Array of scaling option descriptors.
+ */
 function getScalingOptions() {
   const saved = localStorage.getItem('scalingOptions');
   if (!saved) return [
@@ -23,17 +28,31 @@ let scalingOptionsArr = getScalingOptions();
 let currentXAxis = scalingOptionsArr[1]?.key || 'impact';
 let currentYAxis = scalingOptionsArr[0]?.key || 'potential';
 
+/**
+ * Retrieves the maximum value for the axes from settings.
+ * @returns {number} Maximum scaling number.
+ */
 function getMaxNum() {
   return parseInt(localStorage.getItem('maxnum')) || 10;
 }
 let maxnum = getMaxNum();
 
 // Dynamic labels based on selected axes
+/**
+ * Provides human-readable labels for the X axis.
+ * @param {string} axis - Axis key (reserved for future use).
+ * @returns {string[]} Labels from high to low.
+ */
 function getXLabels(axis) {
   // RESTORED: Axis labels for clarity
   return ['Maximum', 'Extremely High', 'Very High', 'High', 'Moderately High', 'Medium', 'Moderately Low', 'Low', 'Very Low', 'Extremely Low'];
 }
 
+/**
+ * Provides human-readable labels for the Y axis.
+ * @param {string} axis - Axis key (reserved for future use).
+ * @returns {string[]} Labels from low to high.
+ */
 function getYLabels(axis) {
   // RESTORED: Axis labels for clarity
   return ['Extremely Low', 'Very Low', 'Low', 'Moderately Low', 'Medium', 'Moderately High', 'High', 'Very High', 'Extremely High', 'Maximum'];
@@ -45,8 +64,11 @@ const colorMap = {
   red: '#ef4444' // Critical Risk / Important Opportunity - Modern red
 };
 
-
-
+/**
+ * Determines the fill color for a cell based on score.
+ * @param {number} score - Product of x and y values.
+ * @returns {string} Hex color representing risk level.
+ */
 function getCellColor(score) {
   // Dynamic color based on score (max score is 100 for 10x10)
   if (score > (maxnum**2)*50/100) return colorMap.green;
@@ -54,6 +76,12 @@ function getCellColor(score) {
   return colorMap.red;
 }
 
+/**
+ * Lightens or darkens a hex color.
+ * @param {string} hex - Base color code.
+ * @param {number} percent - Adjustment amount (-100 to 100).
+ * @returns {string} Adjusted color in hex.
+ */
 function adjustBrightness(hex, percent) {
   const num = parseInt(hex.replace("#", ""), 16);
   const amt = Math.round(2.55 * percent);
@@ -66,6 +94,10 @@ function adjustBrightness(hex, percent) {
 }
 
 // Map opportunity data to heatmap cells based on current axis selection
+/**
+ * Converts opportunity cards into heatmap cell data.
+ * @returns {Array<object>} Array of cell descriptors with coordinates and scores.
+ */
 function getHeatmapData() {
   const saved = localStorage.getItem('opportunityCards');
   if (!saved) return [];
@@ -89,6 +121,9 @@ function getHeatmapData() {
   });
 }
 
+/**
+ * Renders the heatmap using current data and axis selections.
+ */
 function renderHeatmap() {
   const container = document.getElementById('chartdiv');
   container.innerHTML = '';
@@ -285,6 +320,9 @@ function addHoverFunctionality(canvas, data) {
   canvas.addEventListener('pointerleave', hideTooltip);
 }
 
+/**
+ * Sets up dropdown controls for selecting axis metrics.
+ */
 function addAxisDropdownFunctionality() {
   const xAxisContent = document.getElementById('x-axis-content');
   const yAxisContent = document.getElementById('y-axis-content');
@@ -368,6 +406,9 @@ function addAxisDropdownFunctionality() {
 }
 
 // --- MODIFIED: New initialization flow ---
+/**
+ * Entry point for the heatmap page; initializes controls and renders the chart.
+ */
 function initializeApp() {
     addAxisDropdownFunctionality(); // Sets up dropdown controls and listeners ONCE.
     renderHeatmap(); // Renders the initial heatmap.
