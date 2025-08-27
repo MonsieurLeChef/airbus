@@ -195,22 +195,52 @@ function renderHeatmap() {
     }
   }
 
-  // Draw axis labels
-  ctx.font = '13px Inter, Arial';
-  ctx.fillStyle = '#1f2937';
-  
-  const currentXLabels = getXLabels(currentXAxis);
-  const currentYLabels = getYLabels(currentYAxis);
-  
-  // Y axis labels
-  for (let y = 0; y < maxnum; y++) {
-    // MODIFIED: Added save/translate/rotate/restore to draw text vertically
-    ctx.save();
-    ctx.translate(70, 40 + y*cellH + cellH/2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText(currentYLabels[y], 0, 0);
-    ctx.restore();
+
+  // Draw axis arrows and names (no labels)
+  // Y axis arrow (vertical, straight arrowhead)
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(60, 40 + maxnum*cellH); // bottom
+  ctx.lineTo(60, 40); // top
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  // Arrowhead
+  ctx.beginPath();
+  ctx.moveTo(60, 40); // tip
+  ctx.lineTo(54, 50); // left wing
+  ctx.moveTo(60, 40);
+  ctx.lineTo(66, 50); // right wing
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.restore();
+
+  // X axis arrow (horizontal, straight arrowhead)
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(gridStartX, 40 + maxnum*cellH + 40); // left
+  ctx.lineTo(gridStartX + maxnum*cellW, 40 + maxnum*cellH + 40); // right
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  // Arrowhead
+  ctx.beginPath();
+  ctx.moveTo(gridStartX + maxnum*cellW, 40 + maxnum*cellH + 40); // tip
+  ctx.lineTo(gridStartX + maxnum*cellW - 10, 40 + maxnum*cellH + 34); // top wing
+  ctx.moveTo(gridStartX + maxnum*cellW, 40 + maxnum*cellH + 40);
+  ctx.lineTo(gridStartX + maxnum*cellW - 10, 40 + maxnum*cellH + 46); // bottom wing
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.restore();
+
+  // Axis names
+  function capitalizeWords(str) {
+    if (!str) return '';
+    return str.replace(/\b\w/g, l => l.toUpperCase());
   }
+<<<<<<< HEAD
   // X axis labels
   for (let x = 0; x < maxnum; x++) {
     ctx.fillText(currentXLabels[x], gridStartX + x*cellW + cellW/2, 40 + maxnum*cellH + 24);
@@ -236,6 +266,23 @@ function renderHeatmap() {
     ctx.font = 'bold 20px Inter, Arial';
     ctx.fillText(capitalizeWords(currentYAxis), 0, 0);
     ctx.restore();
+=======
+  // Y axis name
+  ctx.save();
+  ctx.translate(30, (maxnum/2*100)+40);
+  ctx.rotate(-Math.PI/2);
+  ctx.font = 'bold 24px Inter, Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'center';
+  ctx.fillText(capitalizeWords(currentYAxis), 0, 0);
+  ctx.restore();
+
+  // X axis name
+  ctx.font = 'bold 24px Inter, Arial';
+  ctx.fillStyle = '#222';
+  ctx.textAlign = 'center';
+  ctx.fillText(capitalizeWords(currentXAxis), gridStartX + (maxnum*cellW)/2, 40 + maxnum*cellH + 80);
+>>>>>>> origin/Advanced-Dashboard
 
   // Draw opportunity points
   const data = getHeatmapData();
