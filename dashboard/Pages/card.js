@@ -2,27 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load attributes and scalers from localStorage
     function getAttributes() {
         const saved = localStorage.getItem('attributesOptions');
-        if (!saved) return [
-            { label: 'Category', key: 'category' },
-            { label: 'Date', key: 'date' },
-            { label: 'Opportunity Source', key: 'opportunitysource' },
-            { label: 'Opportunity Owner', key: 'opportunityowner' },
-            { label: 'Action Plan', key: 'actionplan' },
-            { label: 'Detailed Opportunity Description', key: 'detailedopportunitydescription' }
-        ];
+        if (!saved) return [];
         return JSON.parse(saved);
     }
     function getScalers() {
         const saved = localStorage.getItem('scalingOptions');
-        if (!saved) return [
-            { label: 'Likelihood', key: 'likelihood' },
-            { label: 'Impact', key: 'impact' },
-            { label: 'Potential Value', key: 'potentialvalue' },
-            { label: 'Feasibility', key: 'feasibility' },
-            { label: 'Strategic Benefit', key: 'strategicbenefit' },
-            { label: 'Fit', key: 'fit' },
-            { label: 'Risk Level', key: 'risklevel' }
-        ];
+        if (!saved) return [];
         return JSON.parse(saved);
     }
 

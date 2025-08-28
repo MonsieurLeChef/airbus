@@ -5,15 +5,7 @@
 // Dynamically get scaling options from localStorage
 function getScalingOptions() {
   const saved = localStorage.getItem('scalingOptions');
-  if (!saved) return [
-            { label: 'Likelihood', key: 'likelihood' },
-            { label: 'Impact', key: 'impact' },
-            { label: 'Potential Value', key: 'potentialvalue' },
-            { label: 'Feasibility', key: 'feasibility' },
-            { label: 'Strategic Benefit', key: 'strategicbenefit' },
-            { label: 'Fit', key: 'fit' },
-            { label: 'Risk Level', key: 'risklevel' }
-  ];
+  if (!saved) return [];
   return JSON.parse(saved);
 }
 
