@@ -5,26 +5,32 @@
         "children": [
             {
                 "name": "Team",
-                "info": "Questions about the people doing the work.",
+                "info": "Opportunities regarding team dynamics and collaboration.",
                 "children": [
                     {
                         "name": "Skills optimization",
-                        "info": ["Is there any individual improvement that leads to a strong team and organization?"]
+                        "info": ["Is there any individual improvement that leads to a strong team and organization?",
+                            "What skills will be critical in 6–12 months that we should start building now?",
+                            "Where have we recently succeeded because of a specific skill—how do we replicate that?",
+                            "If we had a learning budget/time box, where would we invest it first and why?"]
                     },
                     {
                         "name": "Work-model optimization",
-                        "info": ["Is there any possibility for improving hybrid models?"]
+                        "info": ["How can we optimize work models to better suit the needs of the team?",
+                            "What rituals (standups, demos, retro, office hours) actually add value and which don’t? Are there other rituals we should consider?",
+                            "Which policies are compliance-driven vs. habit? What can be simplified without risk?"]
                     }
                 ]
             },
             {
                 "name": "Organisation",
-                "info": "Questions about structures, processes and support within the organisation.",
+                "info": "Questions about structures, processes and support within Airbus.",
                 "children": [
                     {
-                        "name": "Excellence in Safety",
+                        "name": "Risk, Compliance & Security",
                         "info":
-                            ["Where do we see opportunities to reduce safety incidents further than industry standards?",
+                            ["Where do controls slow us down without adding safety?",
+                            "Where do we see opportunities to reduce safety incidents further than industry standards?",
                             "What new technologies or processes can create safer operations with lower costs?",
                             "How can predictive safety analytics open opportunities to avoid disruptions and build trust?"]
                     },
