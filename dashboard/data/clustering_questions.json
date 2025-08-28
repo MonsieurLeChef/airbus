@@ -1,0 +1,129 @@
+{
+    "innerTitle": "Opportunity Areas",
+    "sunburstData": {
+        "name": "root",
+        "children": [
+            {
+                "name": "Team",
+                "info": "Opportunities regarding team dynamics and collaboration.",
+                "children": [
+                    {
+                        "name": "Skills optimization",
+                        "info": [
+                            "Is there any individual improvement that leads to a strong team and organization?",
+                            "What skills will be critical in 6–12 months that we should start building now?",
+                            "Where have we recently succeeded because of a specific skill—how do we replicate that?",
+                            "If we had a learning budget/time box, where would we invest it first and why?"
+                        ]
+                    },
+                    {
+                        "name": "Work-model optimization",
+                        "info": [
+                            "How can we optimize work models to better suit the needs of the team?",
+                            "What rituals (standups, demos, retro, office hours) actually add value and which don’t? Are there other rituals we should consider?",
+                            "Which policies are compliance-driven vs. habit? What can be simplified without risk?"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Organisation",
+                "info": "Questions about structures, processes and support within Airbus.",
+                "children": [
+                    {
+                        "name": "Risk, Compliance & Security",
+                        "info": [
+                            "Which key risks lack mapped controls—or have redundant/ineffective controls?",
+                            "Where are controls manual today; what can we automate or continuously monitor?",
+                            "How fast do we detect and respond by incident type, and where are the biggest delays?",
+                            "How resilient are we to disruptions and upcoming changes?"
+                        ]
+                    },
+                    {
+                        "name": "Academic & Research Partnerships",
+                        "info": [
+                            "How can joint projects with academia open new frontiers in R&D?",
+                            "What collaborative initiatives could enhance knowledge exchange and innovation?",
+                            "How can we create internships, industrial PhDs, residencies, or adjunct roles tied to our needs?",
+                            "What specific research questions, if solved, would unlock step-change outcomes?",
+                            "Which labs/centers lead in those domains, and what uniquely differentiates them?"
+                        ]
+                    },
+                    {
+                        "name": "(New) Market Segments",
+                        "info": [
+                            "What alternatives do they use now (competitors, in-house, workaround), and why do they stick with them?",
+                            "How large is the reachable segment (TAM/SAM/SOM) and how fast is it growing?",
+                            "What are the key pain points or unmet needs within these segments?",
+                            "What product gaps would block a sale today, and what’s the smallest viable enhancement to unblock?",
+                            "What success metrics define product-market fit here (activation, usage depth, expansion, payback)?"
+                        ]
+                    },
+                    {
+                        "name": "Innovation Culture Development (Incubation)",
+                        "info": [
+                            "What internal ideas or employee-driven projects could lead to breakthrough opportunities?",
+                            "How can adopting emerging technologies open competitive opportunities?",
+                            "What cultural changes would create opportunities for faster innovation adoption across the company?",
+                            "Where do ideas currently come from, and which voices are systematically missing?",
+                            "What’s our standard for customer/partner co-creation—how early and how often do we involve them?",
+                            "What’s the role of internal mentors/coaches do innovators know where to get help?",
+                            "Where do tool/process choices slow innovation?"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Environment",
+                "info": "Questions about the external context and constraints.",
+                "children": [
+                    {
+                        "name": "Sustainability",
+                        "info": [
+                            "Which materials have the heaviest footprint—what recycled/low-carbon substitutes exist? Where can we design for circularity?",
+                            "How can renewable sources of energy be used to support operations?",
+                            "How can we tie team goals/bonuses to measurable sustainability KPIs?",
+                            "How can we optimize workloads, data retention, or hosting regions to lower energy and cost?",
+                            "Which sites or lines could move to renewable electricity soonest?"
+                        ]
+                    },
+                    {
+                        "name": "Market Attractiveness",
+                        "info": [
+                            "How can we expand customer segments by identifying patterns of competitors?",
+                            "Who are the main competitors operating in this market, and what is their market share?",
+                            "How much pricing power exists in this market for different business models?"
+                        ]
+                    },
+                    {
+                        "name": "Product",
+                        "info": [
+                            "How can the product differentiate itself from competitors through unique features, technology, or service quality?",
+                            "How adaptable is the product to evolving regulations, regional demands, and future market trends?",
+                            "What core outcomes does the product deliver today, and which high-value outcomes are still unmet?",
+                            "How easy is switching from incumbents, what would lower switching costs?",
+                            "Where do the support tickets cluster?"
+                        ]
+                    },
+                    {
+                        "name": "Industry attractiveness",
+                        "info": [
+                            "What unique features can you offer ?",
+                            "Where do network effects, standards, or platform lock-in shape competitive advantage?",
+                            "How fragmented vs. consolidated is the industry, and how is it trending?"
+                        ]
+                    },
+                    {
+                        "name": "Regional/Geographical",
+                        "info": [
+                            "What opportunities exist to set up manufacturing or operational bases in low-investment or cost-advantage regions?",
+                            "What opportunities arise from leveraging regional trade agreements, government incentives, or subsidies?",
+                            "What opportunities exist to adapt the product or service to regional cultural, economic, or infrastructure needs?",
+                            "How do competitor strengths differ by region?"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
