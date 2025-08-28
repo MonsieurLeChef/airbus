@@ -202,53 +202,23 @@
           const reader = new FileReader();
           reader.onload = function(evt) {
             const text = evt.target.result;
-            // Robust CSV split: handle quoted commas, empty fields, trailing newlines
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            const lines = text.split(/\r?\n/).filter(Boolean);
             if (!lines.length) return alert('CSV file is empty!');
-            // Parse header
-            const keys = lines[0].split(',').map(k => k.replace(/"/g, '').trim());
-            // Get current attribute/scaling keys from localStorage
-            let validKeys = [];
+            const keys = lines[0].split(',').map(k => k.replace(/"/g, ''));
+            // Get scaler keys from localStorage
+            let scalerKeys = [];
             try {
-              const attrOptions = JSON.parse(localStorage.getItem('attributesOptions') || '[]');
               const scalingOptions = JSON.parse(localStorage.getItem('scalingOptions') || '[]');
-              validKeys = ['name', ...attrOptions.map(opt => opt.key), ...scalingOptions.map(opt => opt.key)];
+              scalerKeys = scalingOptions.map(opt => opt.key);
             } catch {}
-            // Validate header
-            const missing = keys.filter(k => !validKeys.includes(k));
-            if (missing.length) {
-              alert('CSV header does not match current settings.\nMissing or invalid keys: ' + missing.join(', '));
-              return;
-            }
-            // Parse rows
             const cards = lines.slice(1).map(line => {
-              // Split CSV row, handling quoted commas and empty fields
-              const values = [];
-              let inQuotes = false, value = '';
-              for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"') inQuotes = !inQuotes;
-                else if (char === ',' && !inQuotes) {
-                  values.push(value);
-                  value = '';
-                } else value += char;
-              }
-              values.push(value);
-              // Remove quotes from values
-              const cleanValues = values.map(v => v.replace(/"/g, '').trim());
+              const values = line.match(/("[^"]*"|[^,]+)/g).map(v => v.replace(/"/g, ''));
               const card = {};
               keys.forEach((k, i) => {
-                // Convert scaler values to number
-                if (k !== 'name' && validKeys.includes(k)) {
-                  const scalingOptions = JSON.parse(localStorage.getItem('scalingOptions') || '[]');
-                  const scalerKeys = scalingOptions.map(opt => opt.key);
-                  if (scalerKeys.includes(k)) {
-                    card[k] = cleanValues[i] ? Number(cleanValues[i]) : '';
-                  } else {
-                    card[k] = cleanValues[i] || '';
-                  }
+                if (scalerKeys.includes(k)) {
+                  card[k] = values[i] ? Number(values[i]) : '';
                 } else {
-                  card[k] = cleanValues[i] || '';
+                  card[k] = values[i] || '';
                 }
               });
               return card;
